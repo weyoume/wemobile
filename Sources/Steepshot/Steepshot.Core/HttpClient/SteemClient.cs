@@ -248,7 +248,7 @@ namespace Steepshot.Core.HttpClient
             }, ct);
         }
 
-        public override async Task<OperationResult<ImageUploadResponse>> Upload(UploadImageRequest request, UploadResponse uploadResponse, CancellationToken ct)
+        public override async Task<OperationResult<ImageUploadResponse>> CreatePost(UploadImageRequest request, UploadResponse uploadResponse, CancellationToken ct)
         {
             return await Task.Run(() =>
             {
@@ -310,7 +310,7 @@ namespace Steepshot.Core.HttpClient
                 if (keys == null)
                     return new OperationResult<VoidResponse>(new ApplicationError(Localization.Errors.WrongPrivateKey));
 
-                if (!TryCastUrlToAuthorAndPermlink(request.Url, out string author, out string permlink) ||
+                if (!TryCastUrlToAuthorAndPermlink(request.Url, out var author, out var permlink) ||
                     !string.Equals(author, request.Login))
                     return new OperationResult<VoidResponse>(new ApplicationError(Localization.Errors.IncorrectIdentifier));
 

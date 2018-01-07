@@ -187,15 +187,15 @@ namespace Steepshot.iOS.Views
                     Description = descriptionTextField.Text
                 };
                 var serverResult = await _presenter.TryUploadWithPrepare(request);
-                if (!serverResult.Success)
+                if (!serverResult.IsSuccess)
                 {
                     ShowAlert(serverResult);
                 }
                 else
                 {
-                    var result = await _presenter.TryUpload(request, serverResult.Result);
+                    var result = await _presenter.TryCreatePost(request, serverResult.Result);
 
-                    if (result != null && result.Success)
+                    if (result != null && result.IsSuccess)
                     {
                         TagsList.Clear();
                         ShouldProfileUpdate = true;

@@ -34,7 +34,7 @@ namespace Steepshot.Core.Presenters
             };
 
             ErrorBase error;
-            OperationResult<ListResponce<Post>> response;
+            OperationResult<ListResponse<Post>> response;
             do
             {
                 response = await Api.GetPosts(request, ct);

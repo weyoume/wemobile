@@ -6,6 +6,8 @@ using NUnit.Framework;
 using Steepshot.Core.Models.Requests;
 using Steepshot.Core.Utils;
 using System.Threading.Tasks;
+using Steepshot.Core.HttpClient;
+using Steepshot.Core.Models.Responses;
 
 namespace Steepshot.Core.Tests.HttpClient
 {
@@ -21,7 +23,7 @@ namespace Steepshot.Core.Tests.HttpClient
             var request = new AuthorizedRequest(user);
             var response = await Api[apiName].LoginWithPostingKey(request, CancellationToken.None);
             AssertResult(response);
-            Assert.That(response.Success, Is.True);
+            Assert.That(response.IsSuccess, Is.True);
             Assert.That(response.Result.IsSuccess, Is.True);
         }
 
@@ -38,7 +40,7 @@ namespace Steepshot.Core.Tests.HttpClient
             var createPostRequest = new UploadImageRequest(user, "cat" + DateTime.UtcNow.Ticks, file, new[] { "cat1", "cat2", "cat3", "cat4" });
             var servResp = await Api[apiName].UploadWithPrepare(createPostRequest, CancellationToken.None);
             AssertResult(servResp);
-            var createPostResponse = await Api[apiName].Upload(createPostRequest, servResp.Result, CancellationToken.None);
+            var createPostResponse = await Api[apiName].CreatePost(createPostRequest, servResp.Result, CancellationToken.None);
 
             AssertResult(createPostResponse);
             Assert.That(createPostResponse.Result.Body, Is.Not.Empty);
@@ -217,6 +219,35 @@ namespace Steepshot.Core.Tests.HttpClient
             var unfollowResponse = await Api[apiName].Follow(unfollowRequest, CancellationToken.None);
             AssertResult(unfollowResponse);
             Assert.IsTrue(unfollowResponse.Result.IsSuccess);
+        }
+
+
+        [Test]
+        public async Task ApiGatewayTest()
+        {
+            var url = "http://ipv4.download.thinkbroadband.com/5MB.zip";
+            var api = new ApiGateway();
+            var result = await api.DownloadAsync<DownloadResponse>(url, ReadDelegate, CancellationToken.None);
+            AssertResult(result);
+            Assert.IsTrue(result.IsSuccess);
+        }
+
+        private async Task<DownloadResponse> ReadDelegate(DounloadModel model)
+        {
+            var count = 8192;
+            var buffer = new byte[count];
+
+            //outputStream = new MemoryStream();
+            var totalRead = 0;
+            var read = 0;
+            while ((read = await model.SourceStream.ReadAsync(buffer, 0, buffer.Length, model.Token)) > 0)
+            {
+                //outputStream.Write(buffer, 0, read);
+                totalRead += read;
+            }
+            Assert.IsTrue(totalRead == model.Total);
+
+            return new DownloadResponse();
         }
     }
 }

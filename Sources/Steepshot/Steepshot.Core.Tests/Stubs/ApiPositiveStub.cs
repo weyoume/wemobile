@@ -78,9 +78,9 @@ namespace Steepshot.Core.Tests.Stubs
             };
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetUserPosts(UserPostsRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetUserPosts(UserPostsRequest request, CancellationToken ct)
         {
-            var resp = Converter.Deserialize<ListResponce<Post>>(GetUserPostsJson);
+            var resp = Converter.Deserialize<ListResponse<Post>>(GetUserPostsJson);
 
             if (!request.ShowLowRated)
             {
@@ -107,14 +107,14 @@ namespace Steepshot.Core.Tests.Stubs
                 for (var i = 0; i < resp.Results.Count; i++)
                     resp.Results[i].Vote = false;
 
-            return new OperationResult<ListResponce<Post>> { Result = resp };
+            return new OperationResult<ListResponse<Post>> { Result = resp };
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetUserRecentPosts(CensoredNamedRequestWithOffsetLimitFields request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetUserRecentPosts(CensoredNamedRequestWithOffsetLimitFields request, CancellationToken ct)
         {
             var resp = string.IsNullOrEmpty(request.Offset)
-                ? Converter.Deserialize<ListResponce<Post>>(GetUserRecentPostsJson1)
-                : Converter.Deserialize<ListResponce<Post>>(GetUserRecentPostsJson2);
+                ? Converter.Deserialize<ListResponse<Post>>(GetUserRecentPostsJson1)
+                : Converter.Deserialize<ListResponse<Post>>(GetUserRecentPostsJson2);
 
             if (!request.ShowLowRated)
             {
@@ -127,27 +127,27 @@ namespace Steepshot.Core.Tests.Stubs
             if (string.IsNullOrEmpty(request.Login))
                 for (var i = 0; i < resp.Results.Count; i++)
                     resp.Results[i].Vote = false;
-            return new OperationResult<ListResponce<Post>> { Result = resp };
+            return new OperationResult<ListResponse<Post>> { Result = resp };
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetPosts(PostsRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetPosts(PostsRequest request, CancellationToken ct)
         {
-            ListResponce<Post> resp = null;
+            ListResponse<Post> resp = null;
             switch (request.Type)
             {
                 case PostType.Top:
                     {
-                        resp = Converter.Deserialize<ListResponce<Post>>(GetPostsTopJson);
+                        resp = Converter.Deserialize<ListResponse<Post>>(GetPostsTopJson);
                         break;
                     }
                 case PostType.Hot:
                     {
-                        resp = Converter.Deserialize<ListResponce<Post>>(GetPostsHotJson);
+                        resp = Converter.Deserialize<ListResponse<Post>>(GetPostsHotJson);
                         break;
                     }
                 case PostType.New:
                     {
-                        resp = Converter.Deserialize<ListResponce<Post>>(GetPostsNewJson);
+                        resp = Converter.Deserialize<ListResponse<Post>>(GetPostsNewJson);
                         break;
                     }
             }
@@ -177,27 +177,27 @@ namespace Steepshot.Core.Tests.Stubs
                 for (var i = 0; i < resp.Results.Count; i++)
                     resp.Results[i].Vote = false;
 
-            return new OperationResult<ListResponce<Post>> { Result = resp };
+            return new OperationResult<ListResponse<Post>> { Result = resp };
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetPostsByCategory(PostsByCategoryRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetPostsByCategory(PostsByCategoryRequest request, CancellationToken ct)
         {
-            ListResponce<Post> resp = null;
+            ListResponse<Post> resp = null;
             switch (request.Type)
             {
                 case PostType.Top:
                     {
-                        resp = Converter.Deserialize<ListResponce<Post>>(GetPostsTopJson);
+                        resp = Converter.Deserialize<ListResponse<Post>>(GetPostsTopJson);
                         break;
                     }
                 case PostType.Hot:
                     {
-                        resp = Converter.Deserialize<ListResponce<Post>>(GetPostsHotJson);
+                        resp = Converter.Deserialize<ListResponse<Post>>(GetPostsHotJson);
                         break;
                     }
                 case PostType.New:
                     {
-                        resp = Converter.Deserialize<ListResponce<Post>>(GetPostsNewJson);
+                        resp = Converter.Deserialize<ListResponse<Post>>(GetPostsNewJson);
                         break;
                     }
             }
@@ -232,12 +232,12 @@ namespace Steepshot.Core.Tests.Stubs
                 for (var i = 0; i < resp.Results.Count; i++)
                     resp.Results[i].Vote = false;
 
-            return new OperationResult<ListResponce<Post>> { Result = resp };
+            return new OperationResult<ListResponse<Post>> { Result = resp };
         }
 
-        public async Task<OperationResult<ListResponce<UserFriend>>> GetPostVoters(VotersRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<UserFriend>>> GetPostVoters(VotersRequest request, CancellationToken ct)
         {
-            var resp = Converter.Deserialize<ListResponce<UserFriend>>(VotersResult1Json);
+            var resp = Converter.Deserialize<ListResponse<UserFriend>>(VotersResult1Json);
             var skip = 0;
             if (!string.IsNullOrEmpty(request.Offset))
             {
@@ -250,7 +250,7 @@ namespace Steepshot.Core.Tests.Stubs
             }
             resp.Results = resp.Results.Skip(skip).Take(request.Limit).ToList();
 
-            return new OperationResult<ListResponce<UserFriend>> { Result = resp };
+            return new OperationResult<ListResponse<UserFriend>> { Result = resp };
         }
 
         public async Task<OperationResult<VoteResponse>> Vote(VoteRequest request, CancellationToken ct)
@@ -263,14 +263,14 @@ namespace Steepshot.Core.Tests.Stubs
             return new OperationResult<VoidResponse> { Result = new VoidResponse(true) };
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetComments(NamedInfoRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetComments(NamedInfoRequest request, CancellationToken ct)
         {
-            var rez = Converter.Deserialize<ListResponce<Post>>(GetCommentsJson);
+            var rez = Converter.Deserialize<ListResponse<Post>>(GetCommentsJson);
             if (string.IsNullOrEmpty(request.Login))
                 foreach (var itm in rez.Results)
                     itm.Vote = false;
 
-            return new OperationResult<ListResponce<Post>> { Result = rez };
+            return new OperationResult<ListResponse<Post>> { Result = rez };
         }
 
         public async Task<OperationResult<CommentResponse>> CreateComment(CommentRequest request, CancellationToken ct)
@@ -283,7 +283,7 @@ namespace Steepshot.Core.Tests.Stubs
             return new OperationResult<CommentResponse> { Result = new CommentResponse(true) };
         }
 
-        public async Task<OperationResult<ImageUploadResponse>> Upload(UploadImageRequest request, UploadResponse uploadResponse, CancellationToken ct)
+        public async Task<OperationResult<ImageUploadResponse>> CreatePost(UploadImageRequest request, UploadResponse uploadResponse, CancellationToken ct)
         {
             return new OperationResult<ImageUploadResponse> { Result = new ImageUploadResponse() };
         }
@@ -293,17 +293,17 @@ namespace Steepshot.Core.Tests.Stubs
             return new OperationResult<UploadResponse> { Result = new UploadResponse() };
         }
 
-        public async Task<OperationResult<ListResponce<SearchResult>>> GetCategories(OffsetLimitFields request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<SearchResult>>> GetCategories(OffsetLimitFields request, CancellationToken ct)
         {
-            List<string> tags = new List<string>();
-            foreach (var item in Converter.Deserialize<ListResponce<Post>>(GetPostsTopJson).Results.Select(i => i.Tags))
+            var tags = new List<string>();
+            foreach (var item in Converter.Deserialize<ListResponse<Post>>(GetPostsTopJson).Results.Select(i => i.Tags))
                 tags = tags.Union(item).Distinct().ToList();
-            foreach (var item in Converter.Deserialize<ListResponce<Post>>(GetPostsHotJson).Results.Select(i => i.Tags))
+            foreach (var item in Converter.Deserialize<ListResponse<Post>>(GetPostsHotJson).Results.Select(i => i.Tags))
                 tags = tags.Union(item).Distinct().ToList();
-            foreach (var item in Converter.Deserialize<ListResponce<Post>>(GetPostsNewJson).Results.Select(i => i.Tags))
+            foreach (var item in Converter.Deserialize<ListResponse<Post>>(GetPostsNewJson).Results.Select(i => i.Tags))
                 tags = tags.Union(item).Distinct().ToList();
 
-            ListResponce<SearchResult> rez = new ListResponce<SearchResult>
+            var rez = new ListResponse<SearchResult>
             {
                 Results = new List<SearchResult>(tags.Select(i => new SearchResult { Name = i })),
             };
@@ -320,20 +320,20 @@ namespace Steepshot.Core.Tests.Stubs
             }
             rez.Results = rez.Results.Skip(skip).Take(request.Limit).ToList();
 
-            return new OperationResult<ListResponce<SearchResult>> { Result = rez };
+            return new OperationResult<ListResponse<SearchResult>> { Result = rez };
         }
 
-        public async Task<OperationResult<ListResponce<SearchResult>>> SearchCategories(SearchWithQueryRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<SearchResult>>> SearchCategories(SearchWithQueryRequest request, CancellationToken ct)
         {
-            List<string> tags = new List<string>();
-            foreach (var item in Converter.Deserialize<ListResponce<Post>>(GetPostsTopJson).Results.Select(i => i.Tags))
+            var tags = new List<string>();
+            foreach (var item in Converter.Deserialize<ListResponse<Post>>(GetPostsTopJson).Results.Select(i => i.Tags))
                 tags = tags.Union(item).Distinct().ToList();
-            foreach (var item in Converter.Deserialize<ListResponce<Post>>(GetPostsHotJson).Results.Select(i => i.Tags))
+            foreach (var item in Converter.Deserialize<ListResponse<Post>>(GetPostsHotJson).Results.Select(i => i.Tags))
                 tags = tags.Union(item).Distinct().ToList();
-            foreach (var item in Converter.Deserialize<ListResponce<Post>>(GetPostsNewJson).Results.Select(i => i.Tags))
+            foreach (var item in Converter.Deserialize<ListResponse<Post>>(GetPostsNewJson).Results.Select(i => i.Tags))
                 tags = tags.Union(item).Distinct().ToList();
 
-            ListResponce<SearchResult> rez = new ListResponce<SearchResult>
+            var rez = new ListResponse<SearchResult>
             {
                 Results = new List<SearchResult>(tags.Select(i => new SearchResult { Name = i }))
             };
@@ -355,7 +355,7 @@ namespace Steepshot.Core.Tests.Stubs
             }
             rez.Results = rez.Results.Skip(skip).Take(request.Limit).ToList();
 
-            return new OperationResult<ListResponce<SearchResult>> { Result = rez };
+            return new OperationResult<ListResponse<SearchResult>> { Result = rez };
         }
 
         public async Task<OperationResult<UserProfileResponse>> GetUserProfile(UserProfileRequest request, CancellationToken ct)
@@ -364,12 +364,12 @@ namespace Steepshot.Core.Tests.Stubs
             return new OperationResult<UserProfileResponse> { Result = rez };
         }
 
-        public async Task<OperationResult<ListResponce<UserFriend>>> GetUserFriends(UserFriendsRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<UserFriend>>> GetUserFriends(UserFriendsRequest request, CancellationToken ct)
         {
             var rez = request.Type == FriendsType.Followers
-                ? Converter.Deserialize<ListResponce<UserFriend>>(GetUserFriendsFollowersJson)
-                : Converter.Deserialize<ListResponce<UserFriend>>(GetUserFriendsFollowingJson);
-            return new OperationResult<ListResponce<UserFriend>> { Result = rez };
+                ? Converter.Deserialize<ListResponse<UserFriend>>(GetUserFriendsFollowersJson)
+                : Converter.Deserialize<ListResponse<UserFriend>>(GetUserFriendsFollowingJson);
+            return new OperationResult<ListResponse<UserFriend>> { Result = rez };
         }
 
         [Obsolete]
@@ -378,14 +378,14 @@ namespace Steepshot.Core.Tests.Stubs
             return new OperationResult<Post>();
         }
 
-        public async Task<OperationResult<ListResponce<UserFriend>>> SearchUser(SearchWithQueryRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<UserFriend>>> SearchUser(SearchWithQueryRequest request, CancellationToken ct)
         {
-            List<string> tags = new List<string>();
-            tags = tags.Union(Converter.Deserialize<ListResponce<Post>>(GetPostsTopJson).Results.Select(i => i.Author)).Distinct().ToList();
-            tags = tags.Union(Converter.Deserialize<ListResponce<Post>>(GetPostsHotJson).Results.Select(i => i.Author)).Distinct().ToList();
-            tags = tags.Union(Converter.Deserialize<ListResponce<Post>>(GetPostsNewJson).Results.Select(i => i.Author)).Distinct().ToList();
+            var tags = new List<string>();
+            tags = tags.Union(Converter.Deserialize<ListResponse<Post>>(GetPostsTopJson).Results.Select(i => i.Author)).Distinct().ToList();
+            tags = tags.Union(Converter.Deserialize<ListResponse<Post>>(GetPostsHotJson).Results.Select(i => i.Author)).Distinct().ToList();
+            tags = tags.Union(Converter.Deserialize<ListResponse<Post>>(GetPostsNewJson).Results.Select(i => i.Author)).Distinct().ToList();
 
-            ListResponce<UserFriend> rez = new ListResponce<UserFriend>
+            var rez = new ListResponse<UserFriend>
             {
                 Results = new List<UserFriend>(tags.Select(i => new UserFriend { Author = i })),
             };
@@ -395,7 +395,7 @@ namespace Steepshot.Core.Tests.Stubs
                 rez.Results = rez.Results.Where(i => i.Author.Contains(request.Query)).ToList();
             }
 
-            return new OperationResult<ListResponce<UserFriend>> { Result = rez };
+            return new OperationResult<ListResponse<UserFriend>> { Result = rez };
         }
 
         public async Task<OperationResult<UserExistsResponse>> UserExistsCheck(UserExistsRequests request, CancellationToken ct)

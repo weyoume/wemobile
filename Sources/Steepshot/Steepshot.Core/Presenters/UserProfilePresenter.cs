@@ -61,7 +61,7 @@ namespace Steepshot.Core.Presenters
             };
             var response = await Api.GetUserProfile(req, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 UserProfileResponse = response.Result;
                 NotifySourceChanged(nameof(TryGetUserInfo), true);
@@ -88,7 +88,7 @@ namespace Steepshot.Core.Presenters
             var request = new FollowRequest(User.UserInfo, userProfileResponse.HasFollowed ? FollowType.UnFollow : FollowType.Follow, UserName);
             var response = await Api.Follow(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
                 userProfileResponse.HasFollowed = !userProfileResponse.HasFollowed;
 
             return response.Error;

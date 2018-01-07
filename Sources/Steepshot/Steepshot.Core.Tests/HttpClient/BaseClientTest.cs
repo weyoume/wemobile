@@ -23,7 +23,7 @@ namespace Steepshot.Core.Tests.HttpClient
 
             };
             var responce = await Api[apiName].GetPostVoters(request, CancellationToken.None);
-            Assert.IsTrue(responce.Success);
+            Assert.IsTrue(responce.IsSuccess);
             Assert.IsTrue(responce.Result.Count == count);
         }
 
@@ -43,7 +43,7 @@ namespace Steepshot.Core.Tests.HttpClient
 
                 var token = new CancellationTokenSource(50);
                 var responce = await Api[apiName].GetPostVoters(request, token.Token);
-                Assert.IsTrue(responce.Success);
+                Assert.IsTrue(responce.IsSuccess);
                 Assert.IsTrue(responce.Result.Count == count);
             }
             catch (OperationCanceledException)

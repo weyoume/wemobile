@@ -226,7 +226,7 @@ namespace Steepshot.iOS.Views
             sendProgressBar.StartAnimating();
 
             var response = await _presenter.TryCreateComment(commentTextView.Text, Post.Url);
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 commentTextView.Text = string.Empty;
                 _commentsTextViewDelegate.Placeholder.Hidden = false;

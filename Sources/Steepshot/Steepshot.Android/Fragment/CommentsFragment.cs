@@ -170,7 +170,7 @@ namespace Steepshot.Fragment
             if (!IsInitialized)
                 return;
 
-            if (resp != null && resp.Success)
+            if (resp != null && resp.IsSuccess)
             {
                 _textInput.Text = string.Empty;
                 _textInput.ClearFocus();

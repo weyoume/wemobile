@@ -48,7 +48,7 @@ namespace Steepshot.Core.Presenters
 
             var response = await Api.GetPostVoters(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 var voters = response.Result.Results;
                 if (voters.Count > 0)
@@ -88,7 +88,7 @@ namespace Steepshot.Core.Presenters
 
             var response = await Api.GetUserFriends(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 var result = response.Result.Results;
                 if (result.Count > 0)
@@ -124,7 +124,7 @@ namespace Steepshot.Core.Presenters
 
             var response = await Api.SearchUser(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 var result = response.Result.Results;
                 if (result.Count > 0)
@@ -157,7 +157,7 @@ namespace Steepshot.Core.Presenters
             var request = new FollowRequest(User.UserInfo, item.HasFollowed ? Models.Requests.FollowType.UnFollow : Models.Requests.FollowType.Follow, item.Author);
             var response = await Api.Follow(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
                 item.HasFollowed = !item.HasFollowed;
 
             return response.Error;

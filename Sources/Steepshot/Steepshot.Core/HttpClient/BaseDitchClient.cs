@@ -43,7 +43,7 @@ namespace Steepshot.Core.HttpClient
 
         public abstract Task<OperationResult<CommentResponse>> EditComment(CommentRequest request, CancellationToken ct);
 
-        public abstract Task<OperationResult<ImageUploadResponse>> Upload(UploadImageRequest request, UploadResponse uploadResponse, CancellationToken ct);
+        public abstract Task<OperationResult<ImageUploadResponse>> CreatePost(UploadImageRequest request, UploadResponse uploadResponse, CancellationToken ct);
 
         public abstract Task<OperationResult<string>> GetVerifyTransaction(UploadImageRequest request, CancellationToken ct);
 

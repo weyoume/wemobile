@@ -350,7 +350,7 @@ namespace Steepshot.Activity
             if (IsFinishing || IsDestroyed)
                 return;
 
-            if (serverResp != null && serverResp.Success)
+            if (serverResp != null && serverResp.IsSuccess)
             {
                 _response = serverResp.Result;
             }
@@ -406,11 +406,11 @@ namespace Steepshot.Activity
                 return;
             }
 
-            var resp = await Presenter.TryUpload(_request, _response);
+            var resp = await Presenter.TryCreatePost(_request, _response);
             if (IsFinishing || IsDestroyed)
                 return;
 
-            if (resp.Success)
+            if (resp.IsSuccess)
             {
                 OnUploadEnded();
                 BasePresenter.ProfileUpdateType = ProfileUpdateType.Full;

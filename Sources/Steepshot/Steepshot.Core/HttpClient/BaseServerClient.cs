@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Ditch.Core.Helpers;
@@ -11,32 +8,27 @@ using Steepshot.Core.Models.Requests;
 using Steepshot.Core.Models.Responses;
 using Steepshot.Core.Serializing;
 using Steepshot.Core.Errors;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Steepshot.Core.HttpClient
 {
-    public class BaseServerClient
+    public abstract class BaseServerClient
     {
-        private readonly Regex _errorJson = new Regex("(?<=^{\"[a-z_0-9]*\":\\[\").*(?=\"]}$)");
-        private readonly Regex _errorJson2 = new Regex("(?<=^{\"[a-z_0-9]*\":\").*(?=\"}$)");
-        private readonly Regex _errorHtml = new Regex(@"<[^>]+>");
-
         public volatile bool EnableRead;
-        public readonly ApiGateway Gateway;
-
-        protected readonly JsonNetConverter JsonConverter;
-
-        public BaseServerClient(JsonNetConverter converter)
-        {
-            Gateway = new ApiGateway();
-            JsonConverter = converter;
-        }
+        protected ApiGateway Gateway;
+        protected JsonNetConverter JsonConverter;
 
         #region Get requests
 
-        public async Task<OperationResult<ListResponce<Post>>> GetUserPosts(UserPostsRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetUserPosts(UserPostsRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<Post>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
@@ -44,14 +36,17 @@ namespace Steepshot.Core.HttpClient
             AddCensorParameters(parameters, request);
 
             var endpoint = $"user/{request.Username}/posts";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<Post>>(response);
+            return await Gateway.Get<ListResponse<Post>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetUserRecentPosts(CensoredNamedRequestWithOffsetLimitFields request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetUserRecentPosts(CensoredNamedRequestWithOffsetLimitFields request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<Post>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
@@ -59,14 +54,17 @@ namespace Steepshot.Core.HttpClient
             AddCensorParameters(parameters, request);
 
             var endpoint = "recent";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<Post>>(response);
+            return await Gateway.Get<ListResponse<Post>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetPosts(PostsRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetPosts(PostsRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<Post>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
@@ -74,14 +72,17 @@ namespace Steepshot.Core.HttpClient
             AddCensorParameters(parameters, request);
 
             var endpoint = $"posts/{request.Type.ToString().ToLowerInvariant()}";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<Post>>(response);
+            return await Gateway.Get<ListResponse<Post>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetPostsByCategory(PostsByCategoryRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetPostsByCategory(PostsByCategoryRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<Post>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
@@ -89,14 +90,17 @@ namespace Steepshot.Core.HttpClient
             AddCensorParameters(parameters, request);
 
             var endpoint = $"posts/{request.Category}/{request.Type.ToString().ToLowerInvariant()}";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<Post>>(response);
+            return await Gateway.Get<ListResponse<Post>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<UserFriend>>> GetPostVoters(VotersRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<UserFriend>>> GetPostVoters(VotersRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<UserFriend>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
@@ -105,22 +109,24 @@ namespace Steepshot.Core.HttpClient
                 AddLoginParameter(parameters, request.Login);
 
             var endpoint = $"post/{request.Url}/voters";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<UserFriend>>(response);
+            return await Gateway.Get<ListResponse<UserFriend>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<Post>>> GetComments(NamedInfoRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<Post>>> GetComments(NamedInfoRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<Post>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
             AddLoginParameter(parameters, request.Login);
 
             var endpoint = $"post/{request.Url}/comments";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<Post>>(response);
+            return await Gateway.Get<ListResponse<Post>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
         public async Task<OperationResult<UserProfileResponse>> GetUserProfile(UserProfileRequest request, CancellationToken ct)
@@ -128,28 +134,34 @@ namespace Steepshot.Core.HttpClient
             if (!EnableRead)
                 return null;
 
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<UserProfileResponse>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
+
             var parameters = new Dictionary<string, object>();
             AddLoginParameter(parameters, request.Login);
             parameters.Add("show_nsfw", Convert.ToInt32(request.ShowNsfw));
             parameters.Add("show_low_rated", Convert.ToInt32(request.ShowLowRated));
 
             var endpoint = $"user/{request.Username}/info";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<UserProfileResponse>(response);
+            return await Gateway.Get<UserProfileResponse>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<UserFriend>>> GetUserFriends(UserFriendsRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<UserFriend>>> GetUserFriends(UserFriendsRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<UserFriend>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
             AddLoginParameter(parameters, request.Login);
 
             var endpoint = $"user/{request.Username}/{request.Type.ToString().ToLowerInvariant()}";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<UserFriend>>(response);
+            return await Gateway.Get<ListResponse<UserFriend>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
         public async Task<OperationResult<Post>> GetPostInfo(NamedInfoRequest request, CancellationToken ct)
@@ -157,19 +169,26 @@ namespace Steepshot.Core.HttpClient
             if (!EnableRead)
                 return null;
 
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<Post>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
+
             var parameters = new Dictionary<string, object>();
             AddLoginParameter(parameters, request.Login);
             AddCensorParameters(parameters, request);
 
             var endpoint = $"post/{request.Url}/info";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<Post>(response);
+            return await Gateway.Get<Post>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<UserFriend>>> SearchUser(SearchWithQueryRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<UserFriend>>> SearchUser(SearchWithQueryRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<UserFriend>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var parameters = new Dictionary<string, object>();
             AddLoginParameter(parameters, request.Login);
@@ -177,8 +196,7 @@ namespace Steepshot.Core.HttpClient
             parameters.Add("query", request.Query);
 
             var endpoint = "user/search";
-            var response = await Gateway.Get(GatewayVersion.V1P1, endpoint, parameters, ct);
-            return await CreateResult<ListResponce<UserFriend>>(response);
+            return await Gateway.Get<ListResponse<UserFriend>>(GatewayVersion.V1P1, endpoint, parameters, ct);
         }
 
         public async Task<OperationResult<UserExistsResponse>> UserExistsCheck(UserExistsRequests request, CancellationToken ct)
@@ -186,24 +204,30 @@ namespace Steepshot.Core.HttpClient
             if (!EnableRead)
                 return null;
 
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<UserExistsResponse>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
+
             var parameters = new Dictionary<string, object>();
             var endpoint = $"user/{request.Username}/exists";
-            var response = await Gateway.Get(GatewayVersion.V1, endpoint, parameters, ct);
-            return await CreateResult<UserExistsResponse>(response);
+            return await Gateway.Get<UserExistsResponse>(GatewayVersion.V1, endpoint, parameters, ct);
         }
 
-        public async Task<OperationResult<ListResponce<SearchResult>>> GetCategories(OffsetLimitFields request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<SearchResult>>> GetCategories(OffsetLimitFields request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
 
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<SearchResult>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
+
             var parameters = new Dictionary<string, object>();
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
             var endpoint = "categories/top";
-            var response = await Gateway.Get(GatewayVersion.V1, endpoint, parameters, ct);
+            var result = await Gateway.Get<ListResponse<SearchResult>>(GatewayVersion.V1, endpoint, parameters, ct);
 
-            var result = await CreateResult<ListResponce<SearchResult>>(response);
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 foreach (var category in result.Result.Results)
                 {
@@ -213,10 +237,14 @@ namespace Steepshot.Core.HttpClient
             return result;
         }
 
-        public async Task<OperationResult<ListResponce<SearchResult>>> SearchCategories(SearchWithQueryRequest request, CancellationToken ct)
+        public async Task<OperationResult<ListResponse<SearchResult>>> SearchCategories(SearchWithQueryRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
+
+            var results = Validate(request);
+            if (results.Any())
+                return new OperationResult<ListResponse<SearchResult>>(new ValidationError(string.Join(Environment.NewLine, results.Select(i => i.ErrorMessage))));
 
             var query = Transliteration.ToEng(request.Query);
             if (query != request.Query)
@@ -229,10 +257,9 @@ namespace Steepshot.Core.HttpClient
             AddOffsetLimitParameters(parameters, request.Offset, request.Limit);
             parameters.Add("query", request.Query);
             var endpoint = "categories/search";
-            var response = await Gateway.Get(GatewayVersion.V1, endpoint, parameters, ct);
-            var result = await CreateResult<ListResponce<SearchResult>>(response);
+            var result = await Gateway.Get<ListResponse<SearchResult>>(GatewayVersion.V1, endpoint, parameters, ct);
 
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 foreach (var categories in result.Result.Results)
                 {
@@ -243,7 +270,7 @@ namespace Steepshot.Core.HttpClient
             return result;
         }
 
-        public async Task Trace(string endpoint, string login, ErrorBase resultErrors, string target, CancellationToken ct)
+        protected async Task Trace(string endpoint, string login, ErrorBase resultErrors, string target, CancellationToken ct)
         {
             if (!EnableRead)
                 return;
@@ -255,7 +282,7 @@ namespace Steepshot.Core.HttpClient
                 parameters.Add("error", resultErrors == null ? string.Empty : resultErrors.Message);
                 if (!string.IsNullOrEmpty(target))
                     parameters.Add("target", target);
-                await Gateway.Post(GatewayVersion.V1, $@"log/{endpoint}", parameters, ct);
+                await Gateway.Post<VoidResponse>(GatewayVersion.V1, $@"log/{endpoint}", parameters, ct);
             }
             catch
             {
@@ -272,24 +299,19 @@ namespace Steepshot.Core.HttpClient
             SetBeneficiaryParameters(parameters, isNeedRewards);
 
             var endpoint = "beneficiaries";
-            var response = await Gateway.Get(GatewayVersion.V1, endpoint, parameters, ct);
-            return await CreateResult<BeneficiariesResponse>(response);
+            return await Gateway.Get<BeneficiariesResponse>(GatewayVersion.V1, endpoint, parameters, ct);
         }
 
         #endregion Get requests
 
 
-        public Task<OperationResult<UploadResponse>> UploadWithPrepare(UploadImageRequest request, CancellationToken ct)
+        protected async Task<OperationResult<UploadResponse>> Upload(UploadImageRequest request, CancellationToken ct)
         {
             if (!EnableRead)
                 return null;
 
-            return Task.Run(async () =>
-            {
-                OperationHelper.PrepareTags(request.Tags);
-                var response = await Gateway.Upload(GatewayVersion.V1, "post/prepare", request, ct);
-                return await CreateResult<UploadResponse>(response);
-            }, ct);
+            OperationHelper.PrepareTags(request.Tags);
+            return await Gateway.Upload<UploadResponse>(GatewayVersion.V1, "post/prepare", request, ct);
         }
 
         private void AddOffsetLimitParameters(Dictionary<string, object> parameters, string offset, int limit)
@@ -325,51 +347,12 @@ namespace Steepshot.Core.HttpClient
             parameters.Add("show_low_rated", Convert.ToInt32(request.ShowLowRated));
         }
 
-
-        protected virtual async Task<OperationResult<T>> CreateResult<T>(HttpResponseMessage response)
+        protected List<ValidationResult> Validate<T>(T request)
         {
-            var result = new OperationResult<T>();
-            var content = await response.Content.ReadAsStringAsync();
-
-            // HTTP error
-            if (response.StatusCode == HttpStatusCode.InternalServerError ||
-                response.StatusCode != HttpStatusCode.OK &&
-                response.StatusCode != HttpStatusCode.Created)
-            {
-                if (string.IsNullOrWhiteSpace(content))
-                {
-                    result.Error = new ServerError((int)response.StatusCode, Localization.Errors.EmptyResponseContent);
-                    return result;
-                }
-                if (_errorHtml.IsMatch(content))
-                {
-                    result.Error = new ServerError((int)response.StatusCode, Localization.Errors.HttpErrorCodeToMessage(response.StatusCode, content));
-                    return result;
-                }
-                var match = _errorJson.Match(content);
-                if (match.Success)
-                {
-                    var txt = match.Value.Replace("\",\"", Environment.NewLine);
-                    result.Error = new ServerError((int)response.StatusCode, txt);
-                    return result;
-                }
-
-                match = _errorJson2.Match(content);
-                if (match.Success)
-                {
-                    result.Error = new ServerError((int)response.StatusCode, match.Value);
-                    return result;
-                }
-
-                result.Error = new HttpError((int)response.StatusCode, Localization.Errors.UnexpectedError);
-                return result;
-            }
-            else
-            {
-                result.Result = JsonConverter.Deserialize<T>(content);
-            }
-
-            return result;
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(request);
+            Validator.TryValidateObject(request, context, results, true);
+            return results;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Steepshot.Core.Presenters
 
             var response = await Api.SearchCategories(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 var tags = response.Result.Results;
                 if (tags.Count > 0)
@@ -61,7 +61,7 @@ namespace Steepshot.Core.Presenters
 
             var response = await Api.GetCategories(request, ct);
 
-            if (response.Success)
+            if (response.IsSuccess)
             {
                 var tags = response.Result.Results;
                 if (tags.Count > 0)

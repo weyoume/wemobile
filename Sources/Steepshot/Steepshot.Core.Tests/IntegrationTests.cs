@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Steepshot.Core.Authority;
 using Steepshot.Core.Models.Requests;
 using Steepshot.Core.Utils;
 
@@ -19,7 +18,7 @@ namespace Steepshot.Core.Tests
         public async Task Login_With_Posting_Key_Invalid_Credentials(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             user.Login += "x";
             user.PostingKey += "x";
             var request = new AuthorizedRequest(user);
@@ -40,7 +39,7 @@ namespace Steepshot.Core.Tests
         public async Task Login_With_Posting_Key_Wrong_PostingKey(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             user.PostingKey += "x";
             var request = new AuthorizedRequest(user);
 
@@ -60,7 +59,7 @@ namespace Steepshot.Core.Tests
         public async Task Login_With_Posting_Key_Wrong_Username(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             user.Login += "x";
             var request = new AuthorizedRequest(user);
 
@@ -80,7 +79,7 @@ namespace Steepshot.Core.Tests
         public async Task UserPosts(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserPostsRequest(user.Login);
             request.ShowNsfw = true;
             request.ShowLowRated = true;
@@ -117,7 +116,7 @@ namespace Steepshot.Core.Tests
         public async Task UserPosts_Invalid_Username(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserPostsRequest(user.Login + "x");
 
             // Act
@@ -134,7 +133,7 @@ namespace Steepshot.Core.Tests
         public async Task UserPosts_Offset_Limit(KnownChains apiName, string offset)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserPostsRequest(user.Login);
             request.Offset = offset;
             request.Limit = 3;
@@ -157,7 +156,7 @@ namespace Steepshot.Core.Tests
         public async Task UserPosts_With_User_Some_Votes_True(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserPostsRequest(user.Login) { Login = user.Login };
             request.ShowNsfw = true;
             request.ShowLowRated = true;
@@ -175,7 +174,7 @@ namespace Steepshot.Core.Tests
         public async Task UserPosts_Without_User_All_Votes_False(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserPostsRequest(user.Login);
 
             // Act
@@ -192,7 +191,7 @@ namespace Steepshot.Core.Tests
         public async Task UserRecentPosts(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new CensoredNamedRequestWithOffsetLimitFields
             {
                 Login = user.Login
@@ -214,7 +213,7 @@ namespace Steepshot.Core.Tests
         public async Task UserRecentPosts_Offset_Limit(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new CensoredNamedRequestWithOffsetLimitFields
             {
                 Login = user.Login
@@ -293,7 +292,7 @@ namespace Steepshot.Core.Tests
         public async Task Posts_Top_With_User(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new PostsRequest(PostType.Top) { Login = user.Login };
 
             // Act
@@ -369,7 +368,7 @@ namespace Steepshot.Core.Tests
 
             // Assert
             AssertResult(response);
-            Assert.IsTrue(response.Error.Message.Contains("Not Found"), response.Error?.Message);
+            Assert.IsTrue(response.Error.Code == 404);
         }
 
         [Test]
@@ -474,7 +473,7 @@ namespace Steepshot.Core.Tests
         {
             var category = "steepshot";
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new PostsByCategoryRequest(PostType.Top, category) { Login = user.Login };
             request.ShowNsfw = true;
             request.ShowLowRated = true;
@@ -492,12 +491,12 @@ namespace Steepshot.Core.Tests
         public async Task Vote_Up_Already_Voted(KnownChains apiName)
         {
             // Load last post
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var userPostsRequest = new UserPostsRequest(user.Login);
             userPostsRequest.ShowLowRated = true;
             userPostsRequest.ShowNsfw = true;
             var posts = await Api[apiName].GetUserPosts(userPostsRequest, CancellationToken.None);
-            Assert.IsTrue(posts.Success);
+            Assert.IsTrue(posts.IsSuccess);
             var lastPost = posts.Result.Results.First();
 
             // Arrange
@@ -525,7 +524,7 @@ namespace Steepshot.Core.Tests
         public async Task Vote_Down_Already_Voted(KnownChains apiName)
         {
             // Load last post
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var userPostsRequest = new UserPostsRequest(user.Login);
             userPostsRequest.ShowNsfw = true;
             userPostsRequest.ShowLowRated = true;
@@ -620,7 +619,7 @@ namespace Steepshot.Core.Tests
         public async Task Flag_Up_Already_Flagged(KnownChains apiName)
         {
             // Load last post
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var userPostsRequest = new UserPostsRequest(user.Login);
             userPostsRequest.ShowNsfw = true;
             userPostsRequest.ShowLowRated = true;
@@ -649,7 +648,7 @@ namespace Steepshot.Core.Tests
         public async Task Flag_Down_Already_Flagged(KnownChains apiName)
         {
             // Load last post
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var userPostsRequest = new UserPostsRequest(user.Login);
             userPostsRequest.ShowNsfw = true;
             userPostsRequest.ShowLowRated = true;
@@ -779,7 +778,7 @@ namespace Steepshot.Core.Tests
         public async Task Comments_With_User_Check_True_Votes(KnownChains apiName, string url)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new NamedInfoRequest(url) { Login = user.Login };
 
             // Act
@@ -844,7 +843,7 @@ namespace Steepshot.Core.Tests
         public async Task CreateComment_20_Seconds_Delay(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var userPostsRequest = new UserPostsRequest(user.Login);
             userPostsRequest.ShowLowRated = true;
             userPostsRequest.ShowNsfw = true;
@@ -869,7 +868,7 @@ namespace Steepshot.Core.Tests
         public async Task EditCommentTest(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var userPostsRequest = new UserPostsRequest(user.Login);
             userPostsRequest.ShowLowRated = true;
             userPostsRequest.ShowNsfw = true;
@@ -1161,7 +1160,7 @@ namespace Steepshot.Core.Tests
         public async Task UserFriends_Following(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserFriendsRequest(user.Login, FriendsType.Following);
 
             // Act
@@ -1184,7 +1183,7 @@ namespace Steepshot.Core.Tests
         public async Task UserFriends_Followers(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserFriendsRequest(user.Login, FriendsType.Followers);
 
             // Act
@@ -1207,7 +1206,7 @@ namespace Steepshot.Core.Tests
         public async Task UserFriends_Followers_Invalid_Username(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserFriendsRequest(user.Login + "x", FriendsType.Followers);
 
             // Act
@@ -1215,8 +1214,7 @@ namespace Steepshot.Core.Tests
 
             // Assert
             AssertResult(response);
-            Assert.That(response.Result.Results.Any());
-            Assert.That(response.Result.Results, Is.Empty);
+            Assert.That(response.Error.Code == 404);
         }
 
         [Test]
@@ -1225,7 +1223,7 @@ namespace Steepshot.Core.Tests
         public async Task UserFriends_Followers_Offset_Limit(KnownChains apiName, string offset)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserFriendsRequest(user.Login, FriendsType.Followers);
             request.Offset = offset;
             request.Limit = 1;
@@ -1235,7 +1233,6 @@ namespace Steepshot.Core.Tests
 
             // Assert
             AssertResult(response);
-            Assert.That(response.Result.Results, Is.Not.Empty);
             Assert.That(response.Result.Results, Is.Not.Empty);
             Assert.That(response.Result.Results.First().Author, Is.EqualTo(offset));
             Assert.That(response.Result.Results.Count == 1);
@@ -1247,7 +1244,7 @@ namespace Steepshot.Core.Tests
         public async Task UserFriends_Followers_With_User(KnownChains apiName)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new UserFriendsRequest(user.Login, FriendsType.Followers) { Login = user.Login };
 
             // Act
@@ -1301,7 +1298,7 @@ namespace Steepshot.Core.Tests
         public async Task GetPostInfo_With_User(KnownChains apiName, string url)
         {
             // Arrange
-            UserInfo user = Users[apiName];
+            var user = Users[apiName];
             var request = new NamedInfoRequest(url) { Login = user.Login };
             request.ShowNsfw = true;
             request.ShowLowRated = true;
@@ -1370,7 +1367,7 @@ namespace Steepshot.Core.Tests
             // Arrange
             var file = File.ReadAllBytes(GetTestImagePath());
             var tags = new string[UploadImageRequest.TagLimit + 1];
-            for (int i = 0; i < tags.Length; i++)
+            for (var i = 0; i < tags.Length; i++)
             {
                 tags[i] = "cat" + i;
             }
