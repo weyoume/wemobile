@@ -38,7 +38,8 @@ namespace Steepshot.iOS.Cells
         private UIImageView _like;
 
         private UIView _topSeparator;
-        private TTTAttributedLabel _attributedLabel;
+        //private TTTAttributedLabel _attributedLabel;
+        private UITextView _attributedLabel;
         private UILabel _comments;
         private UIView _bottomSeparator;
 
@@ -65,7 +66,7 @@ namespace Steepshot.iOS.Cells
         {
             add
             {
-                _attributedLabel.Delegate = new TTTAttributedLabelFeedDelegate(value);
+                //_attributedLabel.Delegate = new TTTAttributedLabelFeedDelegate(value);
             }
             remove
             {
@@ -167,16 +168,22 @@ namespace Steepshot.iOS.Cells
             _topSeparator.BackgroundColor = Constants.R244G244B246;
             ContentView.AddSubview(_topSeparator);
 
-            _attributedLabel = new TTTAttributedLabel();
-            _attributedLabel.EnabledTextCheckingTypes = NSTextCheckingType.Link;
-            var prop = new NSDictionary();
-            _attributedLabel.LinkAttributes = prop;
-            _attributedLabel.ActiveLinkAttributes = prop;
+            _attributedLabel = new UITextView();
+            _attributedLabel.Editable = false;
+            //_attributedLabel = new TTTAttributedLabel();
+            //_attributedLabel.EnabledTextCheckingTypes = NSTextCheckingType.Link;
+            //var prop = new NSDictionary();
+            //_attributedLabel.LinkAttributes = prop;
+            //_attributedLabel.ActiveLinkAttributes = prop;
             _attributedLabel.Font = Constants.Regular14;
-            _attributedLabel.Lines = 0;
+            //_attributedLabel.Lines = 0;
             _attributedLabel.UserInteractionEnabled = true;
-            _attributedLabel.Enabled = true;
+            //_attributedLabel.Enabled = true;
             //_attributedLabel.BackgroundColor = UIColor.Blue;
+            _attributedLabel.ScrollEnabled = false;
+            //_attributedLabel.TintColor = Constants.R231G72B0;
+            _attributedLabel.WeakLinkTextAttributes = new NSDictionary();
+            _attributedLabel.TextContainerInset = UIEdgeInsets.Zero;
             ContentView.AddSubview(_attributedLabel);
 
             _comments = new UILabel();
@@ -387,7 +394,8 @@ namespace Steepshot.iOS.Cells
 
             _topSeparator.Frame = new CGRect(0, _bodyImage.Frame.Bottom + underPhotoPanelHeight, UIScreen.MainScreen.Bounds.Width, 1);
 
-            _attributedLabel.SetText(variables.Text);
+            //_attributedLabel.SetText(variables.Text);
+            _attributedLabel.AttributedText = variables.Text;
             _attributedLabel.Frame = new CGRect(new CGPoint(leftMargin, _topSeparator.Frame.Bottom + 15),
                                                 new CGSize(UIScreen.MainScreen.Bounds.Width - leftMargin * 2, variables.TextHeight));
 
