@@ -182,10 +182,13 @@
 		"NotificationPosting":"User's posting",
 		"WatchUser":"Notify me of new posts",
 		"UnwatchUser":"Stop notifying me of new posts",
-        "FlagAlertTitle":"Flagging a post can remove rewards and make this material less visible.",
-        "FlagAlertSubtitle":"Some common reasons to flag:",
-        "FlagAlertDescription":"Disagreement on rewards/nFraud or Plagiarism/nHate Speech or Internet Trolling/nIntentional miss-categorized content or Spam",
-        "ReadGuidelines":"Read our Community Guidelines",
+        
+        "PlagiarismAlertTitle":"This content already exists in Steepshot. Plagiarism in not allowed",
+        "PlagiarismAlertMessage":"Are you sure you want to continue publishing? It will have the same link and comment that it is a duplicate of another photo.",
+        "PlagiarismGuidelineText":"Posting guidelines",
+        "PlagiarismNOButtonText":"No, cancel publishing",
+        "PlagiarismYESButtonText":"Yes, continue publishing",
+        "PlagiarismClaimRights":"Claim your rights to this post",
 
         "<h1>Server Error (500)</h1>": "(500) Server Error",
         "<h1>Not Found</h1>":"Not Found",

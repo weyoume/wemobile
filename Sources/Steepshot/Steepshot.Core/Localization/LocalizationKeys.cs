@@ -184,9 +184,11 @@
         NotificationPosting,
         WatchUser,
         UnwatchUser,
-        FlagAlertTitle,
-        FlagAlertSubtitle,
-        FlagAlertDescription,
-        ReadGuidelines
+        PlagiarismAlertTitle,
+        PlagiarismAlertMessage,
+        PlagiarismGuidelineText,
+        PlagiarismNOButtonText,
+        PlagiarismYESButtonText,
+        PlagiarismClaimRights
     }
 }

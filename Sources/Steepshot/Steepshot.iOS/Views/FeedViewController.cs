@@ -14,7 +14,7 @@ using Steepshot.Core.Utils;
 using Steepshot.Core.Localization;
 using CoreGraphics;
 using Steepshot.Core.Errors;
-using InteractiveAlert;
+using PureLayout.Net;
 
 namespace Steepshot.iOS.Views
 {
@@ -232,6 +232,7 @@ namespace Steepshot.iOS.Views
 
         private void ShowPlagiarismNotification()
         {
+            /*
             UIAlertController controller = UIAlertController.Create("Title", "Text", UIAlertControllerStyle.ActionSheet);
 
             float margin = 10.0f;
@@ -240,12 +241,42 @@ namespace Steepshot.iOS.Views
             var plagiarismView = new UITableView(rect);
             plagiarismView.Opaque = false;
 
-            controller.View.AddSubview(plagiarismView);
-
             var height = NSLayoutConstraint.Create(controller.View, NSLayoutAttribute.Height, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, View.Frame.Height * 0.8f);
             controller.View.AddConstraint(height);
+			controller.View.AddSubview(plagiarismView);
 
             PresentViewController(controller, true, null);
+            */
+
+            var title = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertTitle);
+            var message = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertMessage);
+            var margin = 10;
+            var plagiarismDialog = new UIView();
+
+            plagiarismDialog.Frame = new CGRect(margin, margin, View.Frame.Width - margin * 2, View.Frame.Height * 0.8f - margin * 2);
+            plagiarismDialog.BackgroundColor = UIColor.Black.ColorWithAlpha(0.5f);
+            plagiarismDialog.UserInteractionEnabled = true;
+
+            var blur = UIBlurEffect.FromStyle(UIBlurEffectStyle.ExtraLight);
+            var blurView = new UIVisualEffectView(blur);
+            blurView.ClipsToBounds = true;
+            blurView.Layer.CornerRadius = 15;
+            plagiarismDialog.AddSubview(blurView);
+
+            blurView.AutoCenterInSuperview();
+            blurView.AutoSetDimension(ALDimension.Width, plagiarismDialog.Frame.Width);
+
+            var okButton = new UIButton();
+            okButton.SetTitle("Ok", UIControlState.Normal);
+            okButton.SetTitleColor(UIColor.Blue, UIControlState.Normal);
+            blurView.ContentView.AddSubview(okButton);
+
+            okButton.AutoPinEdge(ALEdge.Bottom, ALEdge.Bottom, blurView);
+            okButton.AutoPinEdge(ALEdge.Left, ALEdge.Left, blurView);
+            okButton.AutoPinEdge(ALEdge.Right, ALEdge.Right, blurView);
+            okButton.AutoSetDimension(ALDimension.Height, 50);
+
+
         }
 
         private void Flag(Post post)
