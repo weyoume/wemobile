@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aW8-cd-KRP">
+                    <rect key="frame" x="42.666666666666657" y="708" width="290" height="50"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="290" id="A6m-QV-k0C"/>
+                        <constraint firstAttribute="height" constant="50" id="NJJ-09-1mv"/>
+                    </constraints>
+                    <state key="normal" title="Claim your rights to this post"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="74O-RF-odo">
+                    <rect key="frame" x="42.666666666666657" y="650" width="290" height="50"/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="290" id="XD2-M9-qGx"/>
+                        <constraint firstAttribute="height" constant="50" id="xRk-gS-diH"/>
+                    </constraints>
+                    <state key="normal" title="Yes, continue publishing">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H1M-na-fYG">
+                    <rect key="frame" x="42.666666666666657" y="592" width="290" height="50"/>
+                    <color key="backgroundColor" red="0.90588235289999997" green="0.28235294119999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="SDv-JF-YCk"/>
+                        <constraint firstAttribute="width" constant="290" id="hlv-v5-qXx"/>
+                    </constraints>
+                    <state key="normal" title="No, cancel publishing">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rea-zs-wsR">
+                    <rect key="frame" x="42" y="495" width="291" height="60"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Posting guidelines" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="osD-bw-OOw">
+                            <rect key="frame" x="8" y="19" width="139.66666666666666" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.90588235289999997" green="0.28235294119999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uMN-Gu-iII">
+                            <rect key="frame" x="276" y="19" width="7" height="22"/>
+                            <state key="normal" image="ic_forward.png"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="291" id="Egq-SZ-Xta"/>
+                        <constraint firstItem="uMN-Gu-iII" firstAttribute="centerY" secondItem="Rea-zs-wsR" secondAttribute="centerY" id="J41-6v-SUE"/>
+                        <constraint firstAttribute="trailing" secondItem="uMN-Gu-iII" secondAttribute="trailing" constant="8" id="YUd-8E-IIk"/>
+                        <constraint firstItem="osD-bw-OOw" firstAttribute="centerY" secondItem="Rea-zs-wsR" secondAttribute="centerY" id="n3E-K7-0Yk"/>
+                        <constraint firstAttribute="height" constant="60" id="pZn-FB-q1s"/>
+                        <constraint firstItem="osD-bw-OOw" firstAttribute="leading" secondItem="Rea-zs-wsR" secondAttribute="leading" constant="8" id="xRy-Vc-jSF"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you sure you want to continue publishing? It will have the same link and comment that it is a duplicate of another photo." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="keq-lW-XTd">
+                    <rect key="frame" x="42" y="420" width="291" height="67"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="291" id="UBq-5D-Qhs"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This content already exists in Steepshot. Plagiarism in not allowed" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1vf-YT-CQh">
+                    <rect key="frame" x="42" y="340.33333333333331" width="291" height="71.666666666666686"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="291" id="QfI-P5-zjH"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Rea-zs-wsR" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="1br-8K-Efx"/>
+                <constraint firstItem="keq-lW-XTd" firstAttribute="top" secondItem="1vf-YT-CQh" secondAttribute="bottom" constant="8" id="8ET-Es-Ckp"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="aW8-cd-KRP" secondAttribute="bottom" constant="20" id="Iob-vG-OQT"/>
+                <constraint firstItem="keq-lW-XTd" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="STm-3k-RAO"/>
+                <constraint firstItem="Rea-zs-wsR" firstAttribute="top" secondItem="keq-lW-XTd" secondAttribute="bottom" constant="8" id="Ttd-S9-uw8"/>
+                <constraint firstItem="74O-RF-odo" firstAttribute="top" secondItem="H1M-na-fYG" secondAttribute="bottom" constant="8" id="V8t-GO-rSm"/>
+                <constraint firstItem="aW8-cd-KRP" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="akc-Z6-AuP"/>
+                <constraint firstItem="aW8-cd-KRP" firstAttribute="top" secondItem="74O-RF-odo" secondAttribute="bottom" constant="8" id="b8F-jE-aqs"/>
+                <constraint firstItem="H1M-na-fYG" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="fdK-0R-Sur"/>
+                <constraint firstItem="1vf-YT-CQh" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="sQn-OI-cPh"/>
+                <constraint firstItem="74O-RF-odo" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="uLq-No-eZv"/>
+                <constraint firstItem="H1M-na-fYG" firstAttribute="top" secondItem="Rea-zs-wsR" secondAttribute="bottom" constant="37" id="yna-8R-R4D"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="34.5" y="54"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_forward.png" width="7" height="11"/>
+    </resources>
+</document>

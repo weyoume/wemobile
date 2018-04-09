@@ -220,6 +220,7 @@
     <InterfaceDefinition Include="Cells\AccountTableViewCell.xib" />
     <InterfaceDefinition Include="Views\PhotoPreviewViewController.xib" />
     <InterfaceDefinition Include="Views\PostViewController.xib" />
+    <InterfaceDefinition Include="Resources\Cells\PlagiarismViewCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

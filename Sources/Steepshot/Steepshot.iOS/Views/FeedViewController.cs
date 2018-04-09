@@ -14,6 +14,7 @@ using Steepshot.Core.Utils;
 using Steepshot.Core.Localization;
 using CoreGraphics;
 using Steepshot.Core.Errors;
+using InteractiveAlert;
 
 namespace Steepshot.iOS.Views
 {
@@ -169,7 +170,8 @@ namespace Steepshot.iOS.Views
                     Vote(post);
                     break;
                 case ActionType.More:
-                    Flag(post);
+                    ShowPlagiarismNotification();
+                    //Flag(post);
                     break;
                 case ActionType.Close:
                     feedCollection.Hidden = false;
@@ -226,6 +228,24 @@ namespace Steepshot.iOS.Views
         {
             var error = await _presenter.TryVote(post);
             ShowAlert(error);
+        }
+
+        private void ShowPlagiarismNotification()
+        {
+            UIAlertController controller = UIAlertController.Create("Title", "Text", UIAlertControllerStyle.ActionSheet);
+
+            float margin = 10.0f;
+            CGRect rect = new CGRect(margin, margin, controller.View.Bounds.Size.Width - margin * 4, View.Frame.Height * 0.8f - margin * 2);
+
+            var plagiarismView = new UITableView(rect);
+            plagiarismView.Opaque = false;
+
+            controller.View.AddSubview(plagiarismView);
+
+            var height = NSLayoutConstraint.Create(controller.View, NSLayoutAttribute.Height, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, View.Frame.Height * 0.8f);
+            controller.View.AddConstraint(height);
+
+            PresentViewController(controller, true, null);
         }
 
         private void Flag(Post post)

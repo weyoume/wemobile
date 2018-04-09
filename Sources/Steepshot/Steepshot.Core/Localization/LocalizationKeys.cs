@@ -183,6 +183,10 @@
         NotificationComment,
         NotificationPosting,
         WatchUser,
-        UnwatchUser
+        UnwatchUser,
+        FlagAlertTitle,
+        FlagAlertSubtitle,
+        FlagAlertDescription,
+        ReadGuidelines
     }
 }

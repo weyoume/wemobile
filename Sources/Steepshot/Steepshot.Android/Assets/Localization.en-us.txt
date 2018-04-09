@@ -182,6 +182,10 @@
 		"NotificationPosting":"User's posting",
 		"WatchUser":"Notify me of new posts",
 		"UnwatchUser":"Stop notifying me of new posts",
+        "FlagAlertTitle":"Flagging a post can remove rewards and make this material less visible.",
+        "FlagAlertSubtitle":"Some common reasons to flag:",
+        "FlagAlertDescription":"Disagreement on rewards/nFraud or Plagiarism/nHate Speech or Internet Trolling/nIntentional miss-categorized content or Spam",
+        "ReadGuidelines":"Read our Community Guidelines",
 
         "<h1>Server Error (500)</h1>": "(500) Server Error",
         "<h1>Not Found</h1>":"Not Found",
