@@ -170,8 +170,7 @@ namespace Steepshot.iOS.Views
                     Vote(post);
                     break;
                 case ActionType.More:
-                    ShowPlagiarismNotification();
-                    //Flag(post);
+                    Flag(post);
                     break;
                 case ActionType.Close:
                     feedCollection.Hidden = false;
@@ -228,55 +227,6 @@ namespace Steepshot.iOS.Views
         {
             var error = await _presenter.TryVote(post);
             ShowAlert(error);
-        }
-
-        private void ShowPlagiarismNotification()
-        {
-            /*
-            UIAlertController controller = UIAlertController.Create("Title", "Text", UIAlertControllerStyle.ActionSheet);
-
-            float margin = 10.0f;
-            CGRect rect = new CGRect(margin, margin, controller.View.Bounds.Size.Width - margin * 4, View.Frame.Height * 0.8f - margin * 2);
-
-            var plagiarismView = new UITableView(rect);
-            plagiarismView.Opaque = false;
-
-            var height = NSLayoutConstraint.Create(controller.View, NSLayoutAttribute.Height, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, View.Frame.Height * 0.8f);
-            controller.View.AddConstraint(height);
-			controller.View.AddSubview(plagiarismView);
-
-            PresentViewController(controller, true, null);
-            */
-
-            var title = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertTitle);
-            var message = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertMessage);
-            var margin = 10;
-            var plagiarismDialog = new UIView();
-
-            plagiarismDialog.Frame = new CGRect(margin, margin, View.Frame.Width - margin * 2, View.Frame.Height * 0.8f - margin * 2);
-            plagiarismDialog.BackgroundColor = UIColor.Black.ColorWithAlpha(0.5f);
-            plagiarismDialog.UserInteractionEnabled = true;
-
-            var blur = UIBlurEffect.FromStyle(UIBlurEffectStyle.ExtraLight);
-            var blurView = new UIVisualEffectView(blur);
-            blurView.ClipsToBounds = true;
-            blurView.Layer.CornerRadius = 15;
-            plagiarismDialog.AddSubview(blurView);
-
-            blurView.AutoCenterInSuperview();
-            blurView.AutoSetDimension(ALDimension.Width, plagiarismDialog.Frame.Width);
-
-            var okButton = new UIButton();
-            okButton.SetTitle("Ok", UIControlState.Normal);
-            okButton.SetTitleColor(UIColor.Blue, UIControlState.Normal);
-            blurView.ContentView.AddSubview(okButton);
-
-            okButton.AutoPinEdge(ALEdge.Bottom, ALEdge.Bottom, blurView);
-            okButton.AutoPinEdge(ALEdge.Left, ALEdge.Left, blurView);
-            okButton.AutoPinEdge(ALEdge.Right, ALEdge.Right, blurView);
-            okButton.AutoSetDimension(ALDimension.Height, 50);
-
-
         }
 
         private void Flag(Post post)

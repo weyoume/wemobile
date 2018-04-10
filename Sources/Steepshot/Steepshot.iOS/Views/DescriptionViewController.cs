@@ -21,6 +21,7 @@ using System.Linq;
 using Steepshot.Core.Errors;
 using Steepshot.Core.Localization;
 using ImageIO;
+using PureLayout.Net;
 
 namespace Steepshot.iOS.Views
 {
@@ -565,6 +566,185 @@ namespace Steepshot.iOS.Views
             descriptionTextField.UserInteractionEnabled = enabled;
             tagField.Enabled = enabled;
             tagsCollectionView.UserInteractionEnabled = enabled;
+        }
+
+        private void CreateModalPlagiarismView()
+        { 
+            UIAlertController controller = UIAlertController.Create("", "", UIAlertControllerStyle.ActionSheet);
+
+            var title = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertTitle);
+            var message = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertMessage);
+            var darkFrame = new UIView();
+
+            var alertWidth = 355;
+            var marginOut = 10;
+            var marginIn = 20;
+
+            darkFrame.Frame = new CGRect(0, 0, UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
+            darkFrame.BackgroundColor = UIColor.Black.ColorWithAlpha(0.5f);
+            darkFrame.UserInteractionEnabled = true;
+
+            var dialog = new UIVisualEffectView();
+            dialog.BackgroundColor = UIColor.White;
+            dialog.ClipsToBounds = true;
+            dialog.Layer.CornerRadius = 15;
+            darkFrame.AddSubview(dialog);
+
+            dialog.AutoCenterInSuperview();
+            dialog.AutoSetDimension(ALDimension.Width, UIScreen.MainScreen.Bounds.Width - marginOut * 2);
+
+            // Claim your rights to this post
+
+            var claimRightsButton = CreateButton(AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismClaimRights), UIColor.White, UIColor.Black);
+            claimRightsButton.Layer.BorderWidth = 1f;
+            claimRightsButton.Layer.BorderColor = Constants.R245G245B245.CGColor;
+            dialog.ContentView.AddSubview(claimRightsButton);
+
+            claimRightsButton.AutoPinEdge(ALEdge.Bottom, ALEdge.Bottom, dialog, -marginIn);
+            claimRightsButton.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            claimRightsButton.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+            claimRightsButton.AutoSetDimension(ALDimension.Height, 50);
+
+            // Yes, continue publishing
+
+            var yesButton = CreateButton(AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismYESButtonText), UIColor.Blue, UIColor.White);
+            dialog.ContentView.AddSubview(yesButton);
+
+            yesButton.AutoPinEdge(ALEdge.Bottom, ALEdge.Top, claimRightsButton, -10);
+            yesButton.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            yesButton.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+            yesButton.AutoSetDimension(ALDimension.Height, 50);
+
+            // No, cancel publishing
+
+            var noButton = CreateButton(AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismNOButtonText), Constants.R231G72B0, UIColor.White);
+
+            dialog.ContentView.AddSubview(noButton);
+
+            noButton.AutoPinEdge(ALEdge.Bottom, ALEdge.Top, yesButton, -10);
+            noButton.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            noButton.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+            noButton.AutoSetDimension(ALDimension.Height, 50);
+
+            // Message
+
+            var messageTextView = new UITextView();
+            messageTextView.Editable = false;
+            messageTextView.Font = Constants.Regular14;
+            messageTextView.TextAlignment = UITextAlignment.Left;
+            messageTextView.Text = message;
+            messageTextView.BackgroundColor = UIColor.Clear;
+            messageTextView.ScrollEnabled = false;
+            dialog.ContentView.AddSubview(messageTextView);
+
+            messageTextView.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            messageTextView.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+
+            var size = messageTextView.SizeThatFits(new CGSize(alertWidth - marginIn * 2, 0));
+            messageTextView.AutoSetDimension(ALDimension.Height, size.Height + 7);
+
+            // Title
+
+            var titleTextView = new UITextView();
+            titleTextView.Editable = false;
+            titleTextView.Font = Constants.Semibold20;
+            titleTextView.TextAlignment = UITextAlignment.Left;
+            titleTextView.Text = title;
+            titleTextView.BackgroundColor = UIColor.Clear;
+            titleTextView.ScrollEnabled = false;
+            dialog.ContentView.AddSubview(titleTextView);
+
+            titleTextView.AutoPinEdge(ALEdge.Top, ALEdge.Top, dialog, 7);
+            titleTextView.AutoPinEdge(ALEdge.Bottom, ALEdge.Top, messageTextView, -10);
+            titleTextView.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            titleTextView.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+
+            size = titleTextView.SizeThatFits(new CGSize(alertWidth - marginIn * 2, 0));
+            titleTextView.AutoSetDimension(ALDimension.Height, size.Height + 7);
+
+            // Guideline
+
+            var guidelinesTextView = new UITextView();
+            guidelinesTextView.Editable = false;
+            guidelinesTextView.Font = Constants.Semibold14;
+            guidelinesTextView.TextAlignment = UITextAlignment.Left;
+            guidelinesTextView.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismGuidelineText);
+            guidelinesTextView.UserInteractionEnabled = true;
+            guidelinesTextView.BackgroundColor = UIColor.Clear;
+            guidelinesTextView.TextColor = Constants.R255G34B5;
+            dialog.ContentView.AddSubview(guidelinesTextView);
+
+            guidelinesTextView.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, messageTextView, 35);
+            guidelinesTextView.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            guidelinesTextView.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+
+            size = guidelinesTextView.SizeThatFits(new CGSize(alertWidth - marginIn * 2, 0));
+            guidelinesTextView.AutoSetDimension(ALDimension.Height, size.Height + 7);
+
+            // Separators
+
+            var separator = new UIView();
+            separator.BackgroundColor = Constants.R245G245B245;
+
+            dialog.ContentView.AddSubview(separator);
+
+            separator.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, guidelinesTextView, 15);
+            separator.AutoPinEdge(ALEdge.Bottom, ALEdge.Top, noButton, -39);
+            separator.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            separator.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+            separator.AutoSetDimension(ALDimension.Height, 1);
+
+            separator = new UIView();
+            separator.BackgroundColor = Constants.R245G245B245;
+            dialog.ContentView.AddSubview(separator);
+
+            separator.AutoPinEdge(ALEdge.Bottom, ALEdge.Top, guidelinesTextView, -15);
+            separator.AutoPinEdge(ALEdge.Left, ALEdge.Left, dialog, marginIn);
+            separator.AutoPinEdge(ALEdge.Right, ALEdge.Right, dialog, -marginIn);
+            separator.AutoSetDimension(ALDimension.Height, 1);
+
+            ((InteractivePopNavigationController)NavigationController).IsPushingViewController = true;
+
+            noButton.TouchDown += (sender, e) =>
+            {
+                controller?.BecomeFirstResponder();
+                ((InteractivePopNavigationController)NavigationController).IsPushingViewController = false;
+                darkFrame.RemoveFromSuperview();
+            };
+
+            NavigationController.View.EndEditing(true);
+            NavigationController.View.AddSubview(darkFrame);
+
+            dialog.Transform = CGAffineTransform.Scale(CGAffineTransform.MakeIdentity(), 0.001f, 0.001f);
+
+            UIView.Animate(0.1, () =>
+            {
+                dialog.Transform = CGAffineTransform.Scale(CGAffineTransform.MakeIdentity(), 1.1f, 1.1f);
+            }, () =>
+            {
+                UIView.Animate(0.1, () =>
+                {
+                    dialog.Transform = CGAffineTransform.Scale(CGAffineTransform.MakeIdentity(), 0.9f, 0.9f);
+                }, () =>
+                {
+                    UIView.Animate(0.1, () =>
+                    {
+                        dialog.Transform = CGAffineTransform.MakeIdentity();
+                    }, null);
+                });
+            });
+        }
+
+        private UIButton CreateButton(string title, UIColor backgroundColor, UIColor titleColor)
+        {
+            var button = new UIButton();
+            button.SetTitle(title, UIControlState.Normal);
+            button.Font = Constants.Bold14;
+            button.SetTitleColor(titleColor, UIControlState.Normal);
+            button.BackgroundColor = backgroundColor;
+            button.Layer.CornerRadius = 25;
+
+            return button;
         }
 
         private void GoBack(object sender, EventArgs e)
