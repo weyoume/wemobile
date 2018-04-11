@@ -35,7 +35,7 @@ namespace Steepshot.iOS.Views
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            SetBackButton();
+            SetNavigationBar();
 
             CreateView();
         }
@@ -48,7 +48,7 @@ namespace Steepshot.iOS.Views
             Constants.CreateGradient(yesButton, 25, GradientType.Blue);
 
             Constants.CreateShadow(noButton, Constants.R231G72B0, 0.5f, 25, 10, 12);
-            Constants.CreateShadow(yesButton, Constants.R231G72B0, 0.5f, 25, 10, 12);
+            Constants.CreateShadow(yesButton, Constants.R18G148B246, 0.5f, 25, 10, 12);
         }
 
         private void CreateView()
@@ -62,13 +62,13 @@ namespace Steepshot.iOS.Views
                 photoView.Image = ImageAssets[0].Item2;
                 mainScroll.AddSubview(photoView);
 
-                photoView.AutoPinEdgeToSuperviewEdge(ALEdge.Top, 30f);
-                photoView.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30f);
+                photoView.AutoPinEdgeToSuperviewEdge(ALEdge.Top, 15f);
+                photoView.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 15f);
+                photoView.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 15f);
                 photoView.AutoMatchDimension(ALDimension.Height, ALDimension.Width, photoView);
-                photoView.AutoSetDimension(ALDimension.Width, 150);
-
-                photoView.Layer.BorderColor = Constants.R255G71B5.CGColor;
-                photoView.Layer.BorderWidth = 4;
+                var photoMargin = 15;
+                var photoViewSide = UIScreen.MainScreen.Bounds.Width - photoMargin * 2;
+                photoView.AutoSetDimension(ALDimension.Width, photoViewSide);
             }
             else
             {
@@ -113,14 +113,13 @@ namespace Steepshot.iOS.Views
 
             // Title
 
-            var titleTextView = new UITextView();
-            titleTextView.Editable = false;
-            titleTextView.ScrollEnabled = false;
+            var titleTextView = new UILabel();
             titleTextView.Font = Constants.Semibold20;
             titleTextView.TextAlignment = UITextAlignment.Left;
-            titleTextView.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertTitle);
+            titleTextView.LineBreakMode = UILineBreakMode.WordWrap;
+            titleTextView.Lines = 0;
+            titleTextView.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertGalleryTitle);
             titleTextView.BackgroundColor = UIColor.Clear;
-            titleTextView.TextContainerInset = UIEdgeInsets.Zero;
 
             mainScroll.AddSubview(titleTextView);
 
@@ -130,14 +129,13 @@ namespace Steepshot.iOS.Views
 
             // Message
 
-            var messageTextView = new UITextView();
-            messageTextView.Editable = false;
-            messageTextView.ScrollEnabled = false;
+            var messageTextView = new UILabel();
             messageTextView.Font = Constants.Regular14;
             messageTextView.TextAlignment = UITextAlignment.Left;
+            messageTextView.LineBreakMode = UILineBreakMode.WordWrap;
+            messageTextView.Lines = 0;
             messageTextView.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismAlertMessage);
             messageTextView.BackgroundColor = UIColor.Clear;
-            messageTextView.TextContainerInset = UIEdgeInsets.Zero;
 
             mainScroll.AddSubview(messageTextView);
 
@@ -157,24 +155,27 @@ namespace Steepshot.iOS.Views
             separator.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
             separator.AutoSetDimension(ALDimension.Height, 1f);
 
-            // Guideline text
+            // IPFSLink text
 
-            var guidelineText = new UITextView();
-            guidelineText.Editable = false;
-            guidelineText.ScrollEnabled = false;
-            guidelineText.Font = Constants.Semibold14;
-            guidelineText.TextAlignment = UITextAlignment.Left;
-            guidelineText.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismGuidelineText);
-            guidelineText.TextColor = Constants.R255G34B5;
-            guidelineText.BackgroundColor = UIColor.Clear;
-            guidelineText.TextContainerInset = UIEdgeInsets.Zero;
-            guidelineText.UserInteractionEnabled = true;
+            var ipfsTextView = new UILabel();
+            ipfsTextView.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.IPFSLink);
+            ipfsTextView.Font = Constants.Semibold14;
+            ipfsTextView.TextColor = Constants.R255G34B5;
+            ipfsTextView.TextAlignment = UITextAlignment.Left;
+            ipfsTextView.UserInteractionEnabled = true;
 
-            mainScroll.AddSubview(guidelineText);
+            ipfsTextView.BackgroundColor = UIColor.Clear;
 
-            guidelineText.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, separator, 24);
-            guidelineText.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
-            guidelineText.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
+            UITapGestureRecognizer ipfsTap = new UITapGestureRecognizer(IPFSTap);
+            ipfsTap.NumberOfTapsRequired = 1;
+            ipfsTextView.AddGestureRecognizer(ipfsTap);
+
+            mainScroll.AddSubview(ipfsTextView);
+
+            ipfsTextView.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, separator, 0);
+            ipfsTextView.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
+            ipfsTextView.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
+            ipfsTextView.AutoSetDimension(ALDimension.Height, 70f);
 
             // Arrow
 
@@ -195,7 +196,7 @@ namespace Steepshot.iOS.Views
             separator.BackgroundColor = Constants.R245G245B245;
             mainScroll.AddSubview(separator);
 
-            separator.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, guidelineText, 24);
+            separator.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, ipfsTextView, 0);
             separator.AutoAlignAxisToSuperviewAxis(ALAxis.Vertical);
             separator.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
             separator.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
@@ -211,6 +212,10 @@ namespace Steepshot.iOS.Views
             noButton.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
             noButton.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
             noButton.AutoSetDimension(ALDimension.Height, 50);
+            noButton.TouchDown += (object sender, EventArgs e) => 
+            {
+                
+            };
 
             // yes button
 
@@ -221,21 +226,20 @@ namespace Steepshot.iOS.Views
             yesButton.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, noButton, 10);
             yesButton.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
             yesButton.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
+            yesButton.AutoPinEdgeToSuperviewEdge(ALEdge.Bottom, 10);
             yesButton.AutoSetDimension(ALDimension.Height, 50);
 
-            // claim your rights button
+            // claim your rights button TODO: Add in future versions
 
-            var claimRightsButton = CreateButton(AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismClaimRights), UIColor.White, UIColor.Black);
-            claimRightsButton.Layer.BorderWidth = 1f;
-            claimRightsButton.Layer.BorderColor = Constants.R245G245B245.CGColor;
-
-            mainScroll.AddSubview(claimRightsButton);
-
-            claimRightsButton.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, yesButton, 20);
-            claimRightsButton.AutoPinEdgeToSuperviewEdge(ALEdge.Bottom, 10);
-            claimRightsButton.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
-            claimRightsButton.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
-            claimRightsButton.AutoSetDimension(ALDimension.Height, 50);
+            //var claimRightsButton = CreateButton(AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismClaimRights), UIColor.White, UIColor.Black);
+            //claimRightsButton.Layer.BorderWidth = 1f;
+            //claimRightsButton.Layer.BorderColor = Constants.R245G245B245.CGColor;
+            //mainScroll.AddSubview(claimRightsButton);
+            //claimRightsButton.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, yesButton, 20);
+            //claimRightsButton.AutoPinEdgeToSuperviewEdge(ALEdge.Bottom, 10);
+            //claimRightsButton.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 30);
+            //claimRightsButton.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 30);
+            //claimRightsButton.AutoSetDimension(ALDimension.Height, 50);
         }
 
         private UIButton CreateButton(string title, UIColor backgroundColor, UIColor titleColor)
@@ -250,12 +254,42 @@ namespace Steepshot.iOS.Views
             return button;
         }
 
-        private void SetBackButton()
+        private void SetNavigationBar()
         {
             var leftBarButton = new UIBarButtonItem(UIImage.FromBundle("ic_back_arrow"), UIBarButtonItemStyle.Plain, GoBack);
             NavigationItem.LeftBarButtonItem = leftBarButton;
+
             NavigationItem.Title = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismCheck);
             NavigationController.NavigationBar.TintColor = Constants.R15G24B30;
+
+            UITapGestureRecognizer guidelineTap = new UITapGestureRecognizer(() => 
+            {
+                UIApplication.SharedApplication.OpenUrl(new NSUrl(Core.Constants.Guide));
+            });
+            guidelineTap.NumberOfTapsRequired = 1;
+            var guidelines = new UILabel()
+            {
+                Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.PlagiarismGuidelineText),
+                Font = Constants.Semibold14,
+                TextColor = Constants.R255G34B5,
+                UserInteractionEnabled = true,
+            };
+            guidelines.AddGestureRecognizer(guidelineTap);
+            guidelines.SizeToFit();
+            var rightBarButton = new UIBarButtonItem(guidelines);
+            NavigationItem.RightBarButtonItem = rightBarButton;
+        }
+
+        void IPFSTap()
+        {
+            UIAlertController actionSheetAlert = UIAlertController.Create(null, null, UIAlertControllerStyle.ActionSheet);
+            actionSheetAlert.AddAction(UIAlertAction.Create(AppSettings.LocalizationManager.GetText(LocalizationKeys.Cancel), UIAlertActionStyle.Cancel, null));
+            PresentViewController(actionSheetAlert, true, null);
+        }
+
+        private void ContinuePublishing()
+        { 
+        
         }
 
         private void GoBack(object sender, EventArgs e)

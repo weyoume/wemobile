@@ -185,11 +185,13 @@
         WatchUser,
         UnwatchUser,
         PlagiarismCheck,
-        PlagiarismAlertTitle,
+        PlagiarismAlertSingleTitle,
+        PlagiarismAlertGalleryTitle,
         PlagiarismAlertMessage,
         PlagiarismGuidelineText,
         PlagiarismNOButtonText,
         PlagiarismYESButtonText,
-        PlagiarismClaimRights
+        PlagiarismClaimRights,
+        IPFSLink
     }
 }
