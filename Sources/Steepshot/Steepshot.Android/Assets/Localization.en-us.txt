@@ -182,7 +182,8 @@
 		"NotificationPosting":"User's posting",
 		"WatchUser":"Notify me of new posts",
 		"UnwatchUser":"Stop notifying me of new posts",
-        
+
+        "PlagiarismCheck":"Plagiarism check",
         "PlagiarismAlertTitle":"This content already exists in Steepshot. Plagiarism in not allowed",
         "PlagiarismAlertMessage":"Are you sure you want to continue publishing? It will have the same link and comment that it is a duplicate of another photo.",
         "PlagiarismGuidelineText":"Posting guidelines",

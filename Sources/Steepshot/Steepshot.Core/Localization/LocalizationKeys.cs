@@ -184,6 +184,7 @@
         NotificationPosting,
         WatchUser,
         UnwatchUser,
+        PlagiarismCheck,
         PlagiarismAlertTitle,
         PlagiarismAlertMessage,
         PlagiarismGuidelineText,

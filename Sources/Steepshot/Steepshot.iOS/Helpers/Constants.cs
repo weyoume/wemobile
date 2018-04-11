@@ -33,19 +33,30 @@ namespace Steepshot.iOS.Helpers
         public static readonly CGPoint StartGradientPoint = new CGPoint(0, 0.5f);
         public static readonly CGPoint EndGradientPoint = new CGPoint(1, 0.5f);
         public static readonly CGColor[] OrangeGradient = new CGColor[] { UIColor.FromRGB(255, 121, 4).CGColor, UIColor.FromRGB(255, 22, 5).CGColor };
+        public static readonly CGColor[] BlueGradient = new CGColor[] { UIColor.FromRGB(18, 148, 246).CGColor, UIColor.FromRGB(41, 198, 251).CGColor };
 
         public static readonly nfloat CellSideSize = (UIScreen.MainScreen.Bounds.Width - 2) / 3;
         public static readonly CGSize CellSize = new CGSize(CellSideSize, CellSideSize);
 
         public static readonly TimeSpan ImageCacheDuration = TimeSpan.FromDays(2);
 
-        public static void CreateGradient (UIView view, nfloat cornerRadius)
+        public static void CreateGradient (UIView view, nfloat cornerRadius, GradientType gradientType = GradientType.Orange)
         {
             var gradient = new CAGradientLayer();
             gradient.Frame = view.Bounds;
             gradient.StartPoint = StartGradientPoint;
             gradient.EndPoint = EndGradientPoint;
-            gradient.Colors = OrangeGradient;
+
+            switch (gradientType)
+            {
+                case GradientType.Orange:
+                    gradient.Colors = OrangeGradient;
+                    break;
+                case GradientType.Blue:
+                    gradient.Colors = BlueGradient;
+                    break;
+            }
+
             gradient.CornerRadius = cornerRadius;
             view.Layer.InsertSublayer(gradient, 0);
         }
@@ -80,5 +91,11 @@ namespace Steepshot.iOS.Helpers
     {
         Steem,
         Golos
+    };
+
+    public enum GradientType
+    {
+        Orange,
+        Blue
     };
 }
