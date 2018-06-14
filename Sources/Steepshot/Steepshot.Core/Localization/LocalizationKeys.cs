@@ -41,6 +41,7 @@
         Follow,
         Unfollow,
         Ok,
+        Or,
         TryAgain,
         Forget,
         Voters,

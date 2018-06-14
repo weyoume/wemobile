@@ -1,5 +1,8 @@
 ﻿using System;
+using CoreGraphics;
 using PureLayout.Net;
+using Steepshot.Core.Localization;
+using Steepshot.Core.Utils;
 using Steepshot.iOS.Helpers;
 using Steepshot.iOS.ViewControllers;
 using UIKit;
@@ -22,7 +25,6 @@ namespace Steepshot.iOS.Views
         {
             var leftBarButton = new UIBarButtonItem(UIImage.FromBundle("ic_back_arrow"), UIBarButtonItemStyle.Plain, GoBack);
             NavigationItem.LeftBarButtonItem = leftBarButton;
-            NavigationController.NavigationBar.TintColor = Constants.R15G24B30;
         }
 
         private void CreateView()
@@ -31,17 +33,79 @@ namespace Steepshot.iOS.Views
             background.BackgroundColor = Constants.R250G250B250;
             View.AddSubview(background);
 
-            var steemit = CreateButton(UIImage.FromBundle("ic_steemit"), "Sign up");
-            background.AddSubview(steemit);
+            var emailReg = CreateButton(UIImage.FromBundle("ic_email"), AppSettings.LocalizationManager.GetText(LocalizationKeys.RegisterWithEmail));
+            background.AddSubview(emailReg);
+
+            #region separator
+
+            var separatorsContainer = new UIStackView();
+            separatorsContainer.Axis = UILayoutConstraintAxis.Horizontal;
+            separatorsContainer.Alignment = UIStackViewAlignment.Center;
+            separatorsContainer.Distribution = UIStackViewDistribution.FillEqually;
+
+            var separatorL = new UIView();
+            separatorL.BackgroundColor = Constants.R240G240B240;
+            var separatorR = new UIView();
+            separatorR.BackgroundColor = Constants.R240G240B240;
+
+            var orLabel = new UILabel();
+            orLabel.Lines = 1;
+            orLabel.UserInteractionEnabled = false;
+            orLabel.Font = Constants.Semibold14;
+            orLabel.TextColor = UIColor.Black;
+            orLabel.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.Or);
+            orLabel.TextAlignment = UITextAlignment.Center;
+
+            separatorsContainer.AddArrangedSubview(separatorL);
+            separatorsContainer.AddArrangedSubview(orLabel);
+            separatorsContainer.AddArrangedSubview(separatorR);
+
+            background.AddSubview(separatorsContainer);
+
+            #endregion
+
+            var stackView = new UIStackView();
+            stackView.Axis = UILayoutConstraintAxis.Vertical;
+            stackView.Spacing = 10;
+            stackView.Alignment = UIStackViewAlignment.Fill;
+            stackView.Distribution = UIStackViewDistribution.Fill;
+
+            var steemitReg = CreateButton(UIImage.FromBundle("ic_steemit"), AppSettings.LocalizationManager.GetText(LocalizationKeys.RegisterThroughSteemit));
+            var blocktradesReg = CreateButton(UIImage.FromBundle("ic_blocktrades"), AppSettings.LocalizationManager.GetText(LocalizationKeys.RegisterThroughBlocktrades));
+            var steemcreateReg = CreateButton(UIImage.FromBundle("ic_steemcreate"), AppSettings.LocalizationManager.GetText(LocalizationKeys.RegisterThroughSteemCreate));
+            var emptySpace = new UIView();
+
+            stackView.AddArrangedSubview(steemitReg);
+            stackView.AddArrangedSubview(blocktradesReg);
+            stackView.AddArrangedSubview(steemcreateReg);
+            stackView.AddArrangedSubview(emptySpace);
+
+            background.AddSubview(stackView);
 
             #region constraints
 
             background.AutoPinEdgesToSuperviewEdges();
 
-            steemit.AutoPinEdgeToSuperviewEdge(ALEdge.Top, 20);
-            steemit.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 20);
-            steemit.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 20);
-            steemit.AutoSetDimension(ALDimension.Height, 80);
+            emailReg.AutoPinEdgeToSuperviewEdge(ALEdge.Top, 20);
+            emailReg.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 20);
+            emailReg.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 20);
+            emailReg.AutoSetDimension(ALDimension.Height, 80);
+            steemitReg.AutoSetDimension(ALDimension.Height, 80);
+            blocktradesReg.AutoSetDimension(ALDimension.Height, 80);
+            steemcreateReg.AutoSetDimension(ALDimension.Height, 80);
+
+            separatorsContainer.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 20);
+            separatorsContainer.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 20);
+            separatorsContainer.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, emailReg);
+            separatorsContainer.AutoSetDimension(ALDimension.Height, 68);
+
+            separatorL.AutoSetDimension(ALDimension.Height, 1);
+            separatorR.AutoSetDimension(ALDimension.Height, 1);
+
+            stackView.AutoPinEdgeToSuperviewEdge(ALEdge.Left, 20);
+            stackView.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 20);
+            stackView.AutoPinEdgeToSuperviewEdge(ALEdge.Bottom);
+            stackView.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, separatorsContainer);
 
             #endregion
         }
@@ -75,9 +139,11 @@ namespace Steepshot.iOS.Views
             buttonLogo.AutoPinEdgeToSuperviewEdge(ALEdge.Left);
             buttonLogo.AutoAlignAxisToSuperviewAxis(ALAxis.Horizontal);
             buttonLogo.AutoSetDimensionsToSize(new CoreGraphics.CGSize(80, 80));
+
             arrow.AutoPinEdgeToSuperviewEdge(ALEdge.Right, 20);
             arrow.AutoAlignAxisToSuperviewAxis(ALAxis.Horizontal);
             arrow.AutoSetDimensionsToSize(new CoreGraphics.CGSize(5, 9));
+
             buttonTitle.AutoPinEdge(ALEdge.Left, ALEdge.Right, buttonLogo, 9);
             buttonTitle.AutoPinEdge(ALEdge.Right, ALEdge.Left, arrow);
             buttonTitle.AutoAlignAxisToSuperviewAxis(ALAxis.Horizontal);
