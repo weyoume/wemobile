@@ -26,6 +26,7 @@ namespace Steepshot.iOS.Helpers
         public static readonly UIColor R204G204B204 = UIColor.FromRGB(204, 204, 204);
         public static readonly UIColor R244G244B246 = UIColor.FromRGB(244, 244, 246);
         public static readonly UIColor R245G245B245 = UIColor.FromRGB(245, 245, 245);
+        public static readonly UIColor R250G250B250 = UIColor.FromRGB(250, 250, 250);
         public static readonly UIColor R255G81B4 = UIColor.FromRGB(255, 81, 4);
         public static readonly UIColor R255G71B5 = UIColor.FromRGB(255, 71, 5);
         public static readonly UIColor R255G34B5 = UIColor.FromRGB(255, 34, 5);

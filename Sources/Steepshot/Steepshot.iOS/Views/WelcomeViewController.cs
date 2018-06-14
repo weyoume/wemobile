@@ -52,11 +52,8 @@ namespace Steepshot.iOS.Views
 
         private void CreateAccount(object sender, EventArgs e)
         {
-            var sv = new SFSafariViewController(new Uri(Core.Constants.SteemitRegUrl));
-            sv.Delegate = this;
-
-            NavigationController.SetNavigationBarHidden(true, false);
-            NavigationController.PushViewController(sv, false);
+            var myViewController = new RegistrationViewController();
+            NavigationController.PushViewController(myViewController, true);
         }
 
         [Export("safariViewControllerDidFinish:")]

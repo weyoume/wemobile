@@ -421,6 +421,7 @@
     </Compile>
     <Compile Include="Views\TagsSearchViewControllerDesign.cs" />
     <Compile Include="ViewSources\FolderTableViewSource.cs" />
+    <Compile Include="Views\RegistrationViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\ic_photo_holder.png" />
@@ -544,6 +545,18 @@
     <BundleResource Include="Resources\ic_comment_like_active_disabled%403x.png" />
     <BundleResource Include="Resources\ic_comment_like_inactive%402x.png" />
     <BundleResource Include="Resources\ic_comment_like_inactive%403x.png" />
+    <BundleResource Include="Resources\ic_blocktrades.png" />
+    <BundleResource Include="Resources\ic_blocktrades%402x.png" />
+    <BundleResource Include="Resources\ic_blocktrades%403x.png" />
+    <BundleResource Include="Resources\ic_steemcreate.png" />
+    <BundleResource Include="Resources\ic_steemcreate%402x.png" />
+    <BundleResource Include="Resources\ic_steemcreate%403x.png" />
+    <BundleResource Include="Resources\ic_email.png" />
+    <BundleResource Include="Resources\ic_email%402x.png" />
+    <BundleResource Include="Resources\ic_email%403x.png" />
+    <BundleResource Include="Resources\ic_steemit.png" />
+    <BundleResource Include="Resources\ic_steemit%402x.png" />
+    <BundleResource Include="Resources\ic_steemit%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\Steepshot.Android\Assets\Localization.en-us.txt">
