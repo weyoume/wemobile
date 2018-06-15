@@ -12,7 +12,7 @@ using SafariServices;
 
 namespace Steepshot.iOS.Views
 {
-    public partial class WelcomeViewController : BaseViewController, ISFSafariViewControllerDelegate
+    public partial class WelcomeViewController : BaseViewController
     {
         public override void ViewDidLoad()
         {

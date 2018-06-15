@@ -1,6 +1,7 @@
 ﻿using System;
 using CoreGraphics;
 using PureLayout.Net;
+using SafariServices;
 using Steepshot.Core.Localization;
 using Steepshot.Core.Utils;
 using Steepshot.iOS.Helpers;
@@ -9,7 +10,7 @@ using UIKit;
 
 namespace Steepshot.iOS.Views
 {
-    public class RegistrationViewController : BaseViewController
+    public class RegistrationViewController : BaseViewController, ISFSafariViewControllerDelegate
     {
         public override void ViewDidLoad()
         {
@@ -75,6 +76,21 @@ namespace Steepshot.iOS.Views
             var steemcreateReg = CreateButton(UIImage.FromBundle("ic_steemcreate"), AppSettings.LocalizationManager.GetText(LocalizationKeys.RegisterThroughSteemCreate));
             var emptySpace = new UIView();
 
+            steemitReg.TouchDown += (sender, e) =>
+            {
+                OpenBrowser(new Uri(Core.Constants.SteemitRegUrl));
+            };
+
+            blocktradesReg.TouchDown += (sender, e) =>
+            {
+                OpenBrowser(new Uri(Core.Constants.BlocktradesRegUrl));
+            };
+
+            steemcreateReg.TouchDown += (sender, e) =>
+            {
+                OpenBrowser(new Uri(Core.Constants.SteemCreateRegUrl));
+            };
+
             stackView.AddArrangedSubview(steemitReg);
             stackView.AddArrangedSubview(blocktradesReg);
             stackView.AddArrangedSubview(steemcreateReg);
@@ -108,6 +124,15 @@ namespace Steepshot.iOS.Views
             stackView.AutoPinEdge(ALEdge.Top, ALEdge.Bottom, separatorsContainer);
 
             #endregion
+        }
+
+        private void OpenBrowser(Uri uri)
+        { 
+            var sv = new SFSafariViewController(uri);
+            sv.Delegate = this;
+
+            NavigationController.SetNavigationBarHidden(true, false);
+            NavigationController.PushViewController(sv, false);
         }
 
         private UIButton CreateButton(UIImage logoSource, string titleText)
