@@ -165,8 +165,12 @@
         InsufficientBalance,
         SteemitAccount,
         GolosAccount,
+        InstagramAccount,
         Connect,
         Logout,
-        SwitchTo
+        SwitchTo,
+        HintForInstagram,
+        HintForInstagramConnection,
+        InstagramConnectionDescription,
     }
 }

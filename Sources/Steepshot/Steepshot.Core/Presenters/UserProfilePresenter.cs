@@ -6,6 +6,7 @@ using Steepshot.Core.Models.Requests;
 using Steepshot.Core.Models.Responses;
 using Steepshot.Core.Models.Enums;
 using Steepshot.Core.Utils;
+using Steepshot.Core.HttpClient;
 
 namespace Steepshot.Core.Presenters
 {
@@ -16,6 +17,8 @@ namespace Steepshot.Core.Presenters
         public string UserName { get; set; }
 
         public UserProfileResponse UserProfileResponse { get; private set; }
+
+        public SteepshotApiClient OpenApi => Api;
 
 
         public async Task<ErrorBase> TryLoadNextPosts()

@@ -155,6 +155,7 @@
     <Compile Include="Activity\WelcomeActivity.cs" />
     <Compile Include="Activity\SettingsActivity.cs" />
     <Compile Include="Activity\RegistrationActivity.cs" />
+    <Compile Include="CustomViews\InstagramDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -252,6 +253,13 @@
     <AndroidResource Include="Resources\drawable-mdpi\ic_steemit.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_steemit.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_steemit.png" />
+    <AndroidResource Include="Resources\layout\lyt_instagram_popup.axml" />
+    <AndroidResource Include="Resources\drawable-mdpi\instagramConnectLogo.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\instagramConnectLogo.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\instagramConnectLogo.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\instagramLogo.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\instagramLogo.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\instagramLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\splash.xml" />

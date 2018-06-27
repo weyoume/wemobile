@@ -215,9 +215,13 @@
         "Close":"Close",
         "SteemitAccount":"Steemit account",
         "GolosAccount":"Golos account",
+        "InstagramAccount":"Instagram account",
         "Connect":"Connect",
         "Logout":"Log out",
         "SwitchTo":"Switch to",
+        "HintForInstagram":"Connect Instagram and all your photos will be automatically copied to Steepshot.",
+        "HintForInstagramConnection":"Now all your photos, published in Instagram, automatically copied to Steepshot.",
+        "InstagramConnectionDescription":"Now you can connect your Instagram account to our application to automatically post your posts!",
 
         "<h1>Server Error (500)</h1>": "(500) Server Error",
         "<h1>Not Found</h1>":"Not Found",

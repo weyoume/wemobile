@@ -27,6 +27,8 @@ using Steepshot.CustomViews;
 using Refractored.Controls;
 using Square.Picasso;
 using Steepshot.Core.Errors;
+using Steepshot.Integration;
+using System.Threading;
 
 namespace Steepshot.Activity
 {
@@ -35,10 +37,12 @@ namespace Steepshot.Activity
     {
         private PushSettings PushSettings;
         private BottomSheetDialog _propertiesActionsDialog;
+        private InstagramModule instagramModule;
         private bool _lowRatedChanged;
         private bool _nsfwChanged;
 
 #pragma warning disable 0649, 4014
+
         [BindView(Resource.Id.dtn_terms_of_service)] private Button _termsButton;
         [BindView(Resource.Id.tests)] private AppCompatButton _testsButton;
         [BindView(Resource.Id.btn_guide)] private Button _guideButton;
@@ -83,6 +87,16 @@ namespace Steepshot.Activity
         [BindView(Resource.Id.steem_spinner)] private ProgressBar _steemLoader;
         [BindView(Resource.Id.golos_spinner)] private ProgressBar _golosLoader;
 
+
+        [BindView(Resource.Id.instagram_avatar)] private ImageView _instagramAvatar;
+        [BindView(Resource.Id.instagram_logo)] private ImageView _instagramLogo;
+        [BindView(Resource.Id.instagram_title)] private TextView _instagramTitle;
+        [BindView(Resource.Id.instagram_description)] private TextView _instagramDescription;
+        [BindView(Resource.Id.instagram_lyt)] private LinearLayout _instagramLyt;
+        [BindView(Resource.Id.instagram_button)] private Button _instagramConnectButton;
+        [BindView(Resource.Id.instagram_connect_lyt)] private RelativeLayout _instagramConnectLyt;
+        [BindView(Resource.Id.instagram_spinner)] private ProgressBar _instagramLoader;
+
 #pragma warning restore 0649
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -93,6 +107,8 @@ namespace Steepshot.Activity
 
             var appInfoService = AppSettings.AppInfo;
             var accounts = AppSettings.User.GetAllAccounts();
+
+            instagramModule = new InstagramModule(Presenter.OpenApi.Gateway, AppSettings.User);
 
             _propertiesActionsDialog = new BottomSheetDialog(this);
             _propertiesActionsDialog.Window.RequestFeature(WindowFeatures.NoTitle);
@@ -112,18 +128,23 @@ namespace Steepshot.Activity
             _notificationPosting.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.NotificationPosting);
             _steemConnectButton.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.Connect);
             _golosConnectButton.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.Connect);
+            _instagramConnectButton.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.Connect);
 
             SetupAccounts(accounts);
+            SetInstagramAccount();
 
             _backButton.Visibility = ViewStates.Visible;
             _backButton.Click += GoBackClick;
             _switcher.Visibility = ViewStates.Gone;
             _settings.Visibility = ViewStates.Gone;
 
+            _instagramDescription.Typeface = Style.Regular;
             _steemTitle.Typeface = Style.Semibold;
             _golosTitle.Typeface = Style.Semibold;
+            _instagramTitle.Typeface = Style.Semibold;
             _steemConnectButton.Typeface = Style.Semibold;
             _golosConnectButton.Typeface = Style.Semibold;
+            _instagramConnectButton.Typeface = Style.Semibold;
             _viewTitle.Typeface = Style.Semibold;
             _versionText.Typeface = Style.Regular;
             _nsfwSwitchText.Typeface = Style.Semibold;
@@ -156,6 +177,11 @@ namespace Steepshot.Activity
                 OnAccountAdd();
             };
 
+            _instagramConnectButton.Click += (sender, e) =>
+            {
+                ConnectToInstagram();
+            };
+
             _steemLyt.Click += (sender, e) =>
             {
                 OpenAccountProperties(accounts.FirstOrDefault(p => p.Chain.Equals(KnownChains.Steem)));
@@ -164,6 +190,11 @@ namespace Steepshot.Activity
             _golosLyt.Click += (sender, e) =>
             {
                 OpenAccountProperties(accounts.FirstOrDefault(p => p.Chain.Equals(KnownChains.Golos)));
+            };
+
+            _instagramLyt.Click += (sender, e) =>
+            { 
+                
             };
 
             _nsfwSwitcher.Checked = AppSettings.User.IsNsfw;
@@ -202,9 +233,13 @@ namespace Steepshot.Activity
         protected override void OnResume()
         {
             _steemLoader.Visibility = _golosLoader.Visibility = ViewStates.Gone;
-            _steemConnectButton.Text = _golosConnectButton.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.Connect);
+            _steemConnectButton.Text = _golosConnectButton.Text = _instagramConnectButton.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.Connect);
             _steemConnectButton.Enabled = _golosConnectButton.Enabled = true;
-            _steemLoader.Visibility = _golosLoader.Visibility = ViewStates.Gone;
+
+            _instagramLoader.Visibility = ViewStates.Gone;
+            _instagramConnectButton.Enabled = true;
+
+            SetInstagramAccount();
 
             base.OnResume();
         }
@@ -468,6 +503,35 @@ namespace Steepshot.Activity
                             _golosState.SetImageResource(Resource.Drawable.ic_unchecked);
                         break;
                 }
+            }
+        }
+
+        public void ConnectToInstagram()
+        {
+            _instagramConnectButton.Text = string.Empty;
+            _instagramConnectButton.Enabled = false;
+            _instagramLoader.Visibility = ViewStates.Visible;
+
+            instagramModule.AuthToInstagram(this);
+        }
+
+        private void SetInstagramAccount()
+        { 
+            _instagramTitle.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.InstagramAccount);
+            _instagramDescription.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.HintForInstagram);
+
+            _instagramAvatar.Visibility = ViewStates.Gone;
+            _instagramLogo.Visibility = ViewStates.Gone;
+            _instagramConnectLyt.Visibility = ViewStates.Visible;
+
+            if (instagramModule.IsAuthorized())
+            {
+                _instagramAvatar.Visibility = ViewStates.Visible;
+                _instagramLogo.Visibility = ViewStates.Visible;
+                _instagramConnectLyt.Visibility = ViewStates.Gone;
+
+                _instagramTitle.Text = "@helena_m";
+                _instagramDescription.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.HintForInstagramConnection);
             }
         }
     }
