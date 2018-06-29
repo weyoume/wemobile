@@ -154,7 +154,17 @@ namespace Steepshot.Core.HttpClient
             var endpoint = $"{BaseUrl}/{GatewayVersion.V1P1}/user/{model.Username}/info";
             return await Gateway.Get<UserProfileResponse>(endpoint, parameters, token);
         }
-        
+
+        public async Task<OperationResult<OtherAccountInfoResponse>> GetInstagramAccount(string accessToken, CancellationToken token)
+        { 
+            if (!EnableRead)
+                return null;
+
+            var url = string.Format(Constants.InstagramInfoUrl, accessToken);
+            var result = await Gateway.Get<OtherAccountInfoResponse>(url, token);
+            return result;
+        }
+
         public async Task<OperationResult<ListResponse<UserFriend>>> GetUserFriends(UserFriendsModel model, CancellationToken token)
         {
             if (!EnableRead)

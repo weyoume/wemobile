@@ -7,6 +7,7 @@ using Steepshot.Core.Models.Responses;
 using Steepshot.Core.Models.Enums;
 using Steepshot.Core.Utils;
 using Steepshot.Core.HttpClient;
+using Steepshot.Core.Models.Common;
 
 namespace Steepshot.Core.Presenters
 {
@@ -51,6 +52,15 @@ namespace Steepshot.Core.Presenters
             return error;
         }
 
+        public async Task<OperationResult<OtherAccountInfoResponse>> TryGetInstagramAccount(string accessToken)
+        {
+            return await TryRunTask<string, OtherAccountInfoResponse>(GetInstagramAccount, OnDisposeCts.Token, accessToken);
+        }
+
+        private async Task<OperationResult<OtherAccountInfoResponse>> GetInstagramAccount(string accessToken, CancellationToken ct)
+        {
+            return await Api.GetInstagramAccount(accessToken, ct);
+        }
 
         public async Task<ErrorBase> TryGetUserInfo(string user)
         {

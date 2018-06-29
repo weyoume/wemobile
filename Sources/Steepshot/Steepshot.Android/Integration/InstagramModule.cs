@@ -14,6 +14,8 @@ namespace Steepshot.Integration
         protected readonly Uri AuthorizeUrl = new Uri("https://api.instagram.com/oauth/authorize/");
         private readonly ModuleConfig _moduleConfig;
 
+        public string UserToken => GetOptionsOrDefault<ModuleOptionsModel>(AppId).AccessToken;
+
 
         public InstagramModule(ApiGateway gateway, User user)
             : base(gateway, user)
@@ -43,7 +45,7 @@ namespace Steepshot.Integration
             if (args.IsAuthenticated)
             {
                 var opt = GetOptionsOrDefault<ModuleOptionsModel>(AppId);
-                
+
                 if (args.Account.Properties.ContainsKey(AccessTokenKeyName))
                     opt.AccessToken = args.Account.Properties[AccessTokenKeyName];
 

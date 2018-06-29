@@ -192,11 +192,6 @@ namespace Steepshot.Activity
                 OpenAccountProperties(accounts.FirstOrDefault(p => p.Chain.Equals(KnownChains.Golos)));
             };
 
-            _instagramLyt.Click += (sender, e) =>
-            { 
-                
-            };
-
             _nsfwSwitcher.Checked = AppSettings.User.IsNsfw;
             _lowRatedSwitcher.Checked = AppSettings.User.IsLowRated;
             _powerSwitch.Checked = AppSettings.User.ShowVotingSlider;
@@ -218,7 +213,7 @@ namespace Steepshot.Activity
             _notificationPostingSwitch.CheckedChange += NotificationChange;
 
             //for tests
-            if (AppSettings.User.IsDev || AppSettings.User.Login.Equals("joseph.kalu"))
+            if (AppSettings.User.IsDev || AppSettings.User.Login.Equals("likesmylove"))//"joseph.kalu"))
             {
                 _testsButton.Visibility = ViewStates.Visible;
                 _testsButton.Click += StartTestActivity;
@@ -515,7 +510,7 @@ namespace Steepshot.Activity
             instagramModule.AuthToInstagram(this);
         }
 
-        private void SetInstagramAccount()
+        private async void SetInstagramAccount()
         { 
             _instagramTitle.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.InstagramAccount);
             _instagramDescription.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.HintForInstagram);
@@ -530,8 +525,17 @@ namespace Steepshot.Activity
                 _instagramLogo.Visibility = ViewStates.Visible;
                 _instagramConnectLyt.Visibility = ViewStates.Gone;
 
-                _instagramTitle.Text = "@helena_m";
                 _instagramDescription.Text = AppSettings.LocalizationManager.GetText(LocalizationKeys.HintForInstagramConnection);
+                var resp = await Presenter.TryGetInstagramAccount(instagramModule.UserToken);
+
+                var userData = resp.Result.Data;
+
+                _instagramTitle.Text = !string.IsNullOrEmpty(userData.FullName) ? userData.FullName : userData.Username;
+                Picasso.With(this)
+                       .Load(userData.ProfilePicture)
+                       .Placeholder(Resource.Drawable.ic_holder)
+                       .NoFade()
+                       .Into(_instagramAvatar);
             }
         }
     }

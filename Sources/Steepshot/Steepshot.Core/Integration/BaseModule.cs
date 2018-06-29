@@ -18,7 +18,7 @@ namespace Steepshot.Core.Integration
     public abstract class BaseModule
     {
         protected User User;
-        private SteepshotApiClient Client;
+        public SteepshotApiClient Client;
 
 
         protected BaseModule(User user)

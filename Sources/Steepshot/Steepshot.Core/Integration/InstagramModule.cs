@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Steepshot.Core.Authorization;
 using Steepshot.Core.HttpClient;
@@ -14,9 +15,10 @@ namespace Steepshot.Core.Integration
 {
     public class InstagramModule : BaseModule
     {
-        protected const string AppId = "com.instagram";
         protected ApiGateway Gateway;
         private Regex TagRegex = new Regex(@"(?<=#)[\w.-]*", RegexOptions.CultureInvariant);
+
+        public const string AppId = "com.instagram";
 
 
         public InstagramModule(ApiGateway gateway, User user)
