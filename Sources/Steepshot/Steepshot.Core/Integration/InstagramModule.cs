@@ -56,6 +56,8 @@ namespace Steepshot.Core.Integration
                 var data = rezult.Result.Data.FirstOrDefault(i => i.Type.Equals("image", StringComparison.OrdinalIgnoreCase) || (i.CarouselMedia != null && i.CarouselMedia.Any(m => m.Type.Equals("image", StringComparison.OrdinalIgnoreCase))));
                 if (data != null)
                     acc.MinId = data.Id;
+                
+                SaveOptions(AppId, acc);
                 return;
             }
 
@@ -74,7 +76,7 @@ namespace Steepshot.Core.Integration
 
             var model = new PreparePostModel(User.UserInfo, AppSettings.AppInfo.GetModel())
             {
-                Title = prevData.Caption.Text
+                Title = prevData.Caption != null ? prevData.Caption.Text : "test sharing"
             };
 
             var tagsM = TagRegex.Matches(model.Title);
