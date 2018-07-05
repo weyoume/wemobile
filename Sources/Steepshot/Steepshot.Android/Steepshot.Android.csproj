@@ -156,6 +156,7 @@
     <Compile Include="Activity\SettingsActivity.cs" />
     <Compile Include="Activity\RegistrationActivity.cs" />
     <Compile Include="CustomViews\InstagramDialog.cs" />
+    <Compile Include="Services\SocialService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
