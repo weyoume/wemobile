@@ -27,7 +27,6 @@ using Steepshot.Core.Utils;
 using System.Linq;
 using Android;
 using Android.Runtime;
-using Steepshot.Services;
 
 namespace Steepshot.Activity
 {
@@ -60,11 +59,8 @@ namespace Steepshot.Activity
             _tabLayout.TabSelected += OnTabLayoutOnTabSelected;
             _tabLayout.TabReselected += OnTabLayoutOnTabReselected;
 
-            if (AppSettings.User.IsAuthenticated)
-            {
+            if (AppSettings.User.HasPostingPermission)
                 OneSignal.Current.IdsAvailable(OneSignalCallback);
-                InstagramService();
-            }
         }
 
         private async void OneSignalCallback(string playerId, string pushToken)
@@ -84,20 +80,6 @@ namespace Steepshot.Activity
                     AppSettings.User.PushSettings = PushSettings.All;
                 }
             }
-        }
-
-        public void InstagramService()
-        {
-            //StartService(new Intent(this, Java.Lang.Class.FromType(typeof(SocialService))));
-
-            var alarmTriggerAtTime = SystemClock.ElapsedRealtime() + 20000;
-            var interval = 1000 * 10; // 10 sec
-            var alarmManager = (AlarmManager)GetSystemService(AlarmService);
-            var intent = new Intent(this, Java.Lang.Class.FromType(typeof(SocialService)));
-
-            var pendingIntent = PendingIntent.GetService(this, 0, intent, 0);
-
-            alarmManager.SetRepeating(AlarmType.ElapsedRealtimeWakeup, alarmTriggerAtTime, interval, pendingIntent);
         }
 
         public void HandleNotification(Intent intent)
