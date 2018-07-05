@@ -180,8 +180,12 @@
         ActiveKeyPrivacy,
         SteemitAccount,
         GolosAccount,
+        InstagramAccount,
         Connect,
         Logout,
         SwitchTo,
+        HintForInstagram,
+        HintForInstagramConnection,
+        InstagramConnectionDescription,
     }
 }
