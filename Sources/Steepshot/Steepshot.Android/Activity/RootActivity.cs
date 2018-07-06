@@ -27,6 +27,8 @@ using Steepshot.Core.Utils;
 using System.Linq;
 using Android;
 using Android.Runtime;
+using Steepshot.Services;
+using Android.Util;
 
 namespace Steepshot.Activity
 {
@@ -60,7 +62,23 @@ namespace Steepshot.Activity
             _tabLayout.TabReselected += OnTabLayoutOnTabReselected;
 
             if (AppSettings.User.HasPostingPermission)
+            {
                 OneSignal.Current.IdsAvailable(OneSignalCallback);
+
+                CheckInstagram();
+            }
+        }
+
+        private void CheckInstagram()
+        {
+            var am = (AlarmManager)GetSystemService(AlarmService);
+            var intent = new Intent(this, typeof(SocialReceiver));
+            var pIntent = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.CancelCurrent);
+
+            Log.Debug("#Debug", "Check!");
+
+            am.Cancel(pIntent);
+            am.Set(AlarmType.RtcWakeup, 5000, pIntent);
         }
 
         private async void OneSignalCallback(string playerId, string pushToken)

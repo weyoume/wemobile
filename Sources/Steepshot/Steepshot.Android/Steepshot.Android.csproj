@@ -166,7 +166,7 @@
     <Compile Include="Utils\ViewUtils.cs" />
     <Compile Include="Activity\WelcomeActivity.cs" />
     <Compile Include="Activity\RegistrationActivity.cs" />
-    <Compile Include="Services\SocialService.cs" />
+    <Compile Include="Services\SocialReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
