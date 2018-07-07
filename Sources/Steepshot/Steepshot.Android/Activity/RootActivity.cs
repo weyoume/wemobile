@@ -75,8 +75,6 @@ namespace Steepshot.Activity
             var intent = new Intent(this, typeof(SocialReceiver));
             var pIntent = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.CancelCurrent);
 
-            Log.Debug("#Debug", "Check!");
-
             am.Cancel(pIntent);
             am.Set(AlarmType.RtcWakeup, 5000, pIntent);
         }

@@ -1,10 +1,13 @@
 ﻿
 using System;
-
+using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
+using Steepshot.Core.Integration;
+using Steepshot.Core.Presenters;
+using Steepshot.Core.Utils;
 
 namespace Steepshot.Services
 {
@@ -12,8 +15,11 @@ namespace Steepshot.Services
     [IntentFilter(new[] { Intent.ActionBootCompleted })]
     public class SocialReceiver : BroadcastReceiver
     {
+        private TestPresenter presenter;
+
         public SocialReceiver() : base()
         {
+            presenter = new TestPresenter();
         }
 
         public override void OnReceive(Context context, Intent intent)
@@ -31,12 +37,21 @@ namespace Steepshot.Services
             //notification.Defaults = NotificationDefaults.Lights;
             //nm.Notify(1, notification);
 
+            Log.Debug("#Debug", $"TaskStarted...");
+            Log.Debug("#Debug", $"Data: {presenter.OpenApi.Gateway.ToString()}, {AppSettings.User}");
+
+            var module = new InstagramModule(presenter.OpenApi.Gateway, AppSettings.User);
+            if (module.IsAuthorized())
+            {
+                module.TryCreateNewPost(CancellationToken.None);
+            }
+
             var am = (AlarmManager)context.GetSystemService(Context.AlarmService);
             var myIntent = new Intent(context, typeof(SocialReceiver));
             var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, PendingIntentFlags.CancelCurrent);
-            am.Set(AlarmType.RtcWakeup, Java.Lang.JavaSystem.CurrentTimeMillis() + 5000, pIntent);
+            am.Set(AlarmType.RtcWakeup, Java.Lang.JavaSystem.CurrentTimeMillis() + 15000, pIntent);
 
-            Log.Debug("#Debug", "TaskReceived!");
+            Log.Debug("#Debug", $"TaskReceived! {module.IsAuthorized().ToString()}");
         }
     }
 }
