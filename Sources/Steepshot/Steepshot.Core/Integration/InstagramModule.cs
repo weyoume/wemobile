@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Util;
 using Newtonsoft.Json;
 using Steepshot.Core.Authorization;
+using Steepshot.Core.Extensions;
 using Steepshot.Core.HttpClient;
 using Steepshot.Core.Models.Common;
 using Steepshot.Core.Models.Requests;
@@ -46,7 +46,6 @@ namespace Steepshot.Core.Integration
             {
                 {"access_token", acc.AccessToken},
             };
-            Log.Debug("#Insta", $"step #1: {acc.AccessToken} | {args.ToString()} | {token.ToString()}");
 
             OperationResult<ModuleRecentMediaResult> rezult = new OperationResult<ModuleRecentMediaResult>();
             try
@@ -54,32 +53,27 @@ namespace Steepshot.Core.Integration
                 rezult = await Gateway.Get<ModuleRecentMediaResult>("https://api.instagram.com/v1/users/self/media/recent/", args, token);
             }
             catch (Exception ex)
-            { 
-                Log.Error("#Insta", $"{ex.ToString()}");
-            }
+            { }
 
-            Log.Debug("#Insta", $"step #2");
             if (!rezult.IsSuccess)
                 return;
-            Log.Debug("#Insta", $"step #3");
+
             if (acc.MinId == null)
             {
                 var data = rezult.Result.Data.FirstOrDefault(i => i.Type.Equals("image", StringComparison.OrdinalIgnoreCase) || (i.CarouselMedia != null && i.CarouselMedia.Any(m => m.Type.Equals("image", StringComparison.OrdinalIgnoreCase))));
                 if (data != null)
                     acc.MinId = data.Id;
 
-                Log.Debug("#Insta", $"New posts not found!");
                 SaveOptions(AppId, acc);
                 return;
             }
-            Log.Debug("#Insta", $"step #4");
+
             ModuleData prevData = null;
 
             foreach (var data in rezult.Result.Data.Where(i => i.Type.Equals("image", StringComparison.OrdinalIgnoreCase) || (i.CarouselMedia != null && i.CarouselMedia.Any(m => m.Type.Equals("image", StringComparison.OrdinalIgnoreCase)))))
             {
                 if (data.Id != acc.MinId)
                 {
-                    Log.Debug("#Insta", $"You have new post!");
                     prevData = data;
                 }
                 else
@@ -88,13 +82,17 @@ namespace Steepshot.Core.Integration
 
             if (prevData == null)
             {
-                Log.Debug("#Insta", $"step #5");
                 return;
             }
 
+            string caption = string.Empty;
+            if (prevData != null)
+                caption = prevData.Caption.Text;
+
             var model = new PreparePostModel(User.UserInfo, AppSettings.AppInfo.GetModel())
             {
-                Title = prevData.Caption != null ? prevData.Caption.Text : "test sharing"
+                Title = !string.IsNullOrEmpty(caption) ? caption.Truncate(252) : "Post from Instagram",
+                Description = prevData.Caption.Text
             };
 
             var tagsM = TagRegex.Matches(model.Title);
@@ -119,12 +117,10 @@ namespace Steepshot.Core.Integration
                     .ToArray();
             }
 
-            Log.Debug("#Insta", $"Start posting...");
             var result = await CreatePost(model, token);
 
             if (result.IsSuccess)
             {
-                Log.Debug("#Insta", $"Success!");
                 acc.MinId = prevData.Id;
                 SaveOptions(AppId, acc);
             }
