@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.Content;
+using Android.Util;
 using Newtonsoft.Json;
 using Steepshot.Core.Authorization;
 using Steepshot.Core.HttpClient;
@@ -27,6 +28,8 @@ namespace Steepshot.Integration
 
         public void AuthToInstagram(Context context)
         {
+            Log.Warn("#Insta", "Auth to instagram...");
+
             if (_moduleConfig == null)
                 return;
 
@@ -48,6 +51,8 @@ namespace Steepshot.Integration
 
                 if (args.Account.Properties.ContainsKey(AccessTokenKeyName))
                     opt.AccessToken = args.Account.Properties[AccessTokenKeyName];
+
+                Log.Warn("#Insta", "Auth completed!");
 
                 User.Integration[AppId] = JsonConvert.SerializeObject(opt);
                 User.Save();

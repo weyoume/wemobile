@@ -11,6 +11,7 @@ using Steepshot.Utils;
 using System;
 using Steepshot.Core.Authorization;
 using Steepshot.Core.HttpClient;
+using Android.Content;
 
 namespace Steepshot.Base
 {
@@ -28,6 +29,7 @@ namespace Steepshot.Base
             base.OnCreate();
             InitIoC(Context.Assets);
             InitPicassoCache();
+            CheckInstagram();
         }
 
         private void InitPicassoCache()
@@ -39,6 +41,19 @@ namespace Steepshot.Base
                 d.MemoryCache(Cache);
                 Picasso.SetSingletonInstance(d.Build());
             }
+        }
+
+        public void CheckInstagram()
+        {
+            Android.Util.Log.Debug("#Insta", $"Root");
+
+            var am = (AlarmManager)Context.GetSystemService(AlarmService);
+            var intent = new Intent(Context, typeof(SocialReceiver));
+            var pIntent = PendingIntent.GetBroadcast(Context, 0, intent, 0);
+
+            am.Cancel(pIntent);
+            am.Set(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 5000, pIntent);
+            //am.SetInexactRepeating(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 61000, 61000, pIntent);
         }
 
         public static void InitIoC(Android.Content.Res.AssetManager assetManagerssets)

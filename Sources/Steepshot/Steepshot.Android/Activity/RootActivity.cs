@@ -64,19 +64,7 @@ namespace Steepshot.Activity
             if (AppSettings.User.HasPostingPermission)
             {
                 OneSignal.Current.IdsAvailable(OneSignalCallback);
-
-                CheckInstagram();
             }
-        }
-
-        private void CheckInstagram()
-        {
-            var am = (AlarmManager)GetSystemService(AlarmService);
-            var intent = new Intent(this, typeof(SocialReceiver));
-            var pIntent = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.CancelCurrent);
-
-            am.Cancel(pIntent);
-            am.Set(AlarmType.RtcWakeup, 5000, pIntent);
         }
 
         private async void OneSignalCallback(string playerId, string pushToken)
