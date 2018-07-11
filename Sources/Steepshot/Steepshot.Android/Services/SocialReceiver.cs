@@ -44,7 +44,7 @@ namespace Steepshot.Services
             var am = (AlarmManager)context.GetSystemService(Context.AlarmService);
             var myIntent = new Intent(context, typeof(SocialReceiver));
             var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, PendingIntentFlags.CancelCurrent);
-            am.Set(AlarmType.RtcWakeup, Java.Lang.JavaSystem.CurrentTimeMillis() + 15000, pIntent);
+            am.Set(AlarmType.RtcWakeup, Java.Lang.JavaSystem.CurrentTimeMillis() + 300000, pIntent); // 300000 - 5min
 
             Log.Debug("#Insta", $"...taskReceived!");
         }

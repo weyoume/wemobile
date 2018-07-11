@@ -47,13 +47,7 @@ namespace Steepshot.Core.Integration
                 {"access_token", acc.AccessToken},
             };
 
-            OperationResult<ModuleRecentMediaResult> rezult = new OperationResult<ModuleRecentMediaResult>();
-            try
-            {
-                rezult = await Gateway.Get<ModuleRecentMediaResult>("https://api.instagram.com/v1/users/self/media/recent/", args, token);
-            }
-            catch (Exception ex)
-            { }
+            var rezult = await Gateway.Get<ModuleRecentMediaResult>("https://api.instagram.com/v1/users/self/media/recent/", args, token);
 
             if (!rezult.IsSuccess)
                 return;
@@ -87,12 +81,12 @@ namespace Steepshot.Core.Integration
 
             string caption = string.Empty;
             if (prevData != null)
-                caption = prevData.Caption.Text;
+                caption = prevData.Caption?.Text;
 
             var model = new PreparePostModel(User.UserInfo, AppSettings.AppInfo.GetModel())
             {
                 Title = !string.IsNullOrEmpty(caption) ? caption.Truncate(252) : "Post from Instagram",
-                Description = prevData.Caption.Text
+                Description = !string.IsNullOrEmpty(caption) ? caption : string.Empty
             };
 
             var tagsM = TagRegex.Matches(model.Title);
