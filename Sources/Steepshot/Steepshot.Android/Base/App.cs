@@ -52,8 +52,8 @@ namespace Steepshot.Base
                 var pIntent = PendingIntent.GetBroadcast(Context, 0, intent, 0);
 
                 Android.Util.Log.Debug("#Insta", $"Root");
-                am.Cancel(pIntent);
-                am.Set(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 15000, pIntent);
+                am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 61000, 61000, pIntent);
+                //am.Set(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 15000, pIntent);
             }
             //else
             //{ 
