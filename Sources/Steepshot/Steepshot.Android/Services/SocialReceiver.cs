@@ -44,7 +44,7 @@ namespace Steepshot.Services
             var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, 0);
 
             am.Cancel(pIntent);
-            am.Set(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 5000, pIntent); // 300000 - 5min
+            am.Set(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 15000, pIntent); // 300000 - 5min
 
             Log.Warn("#Insta", $"Task received");
         }
