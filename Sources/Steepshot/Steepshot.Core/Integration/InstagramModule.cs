@@ -9,6 +9,7 @@ using Steepshot.Core.Authorization;
 using Steepshot.Core.Extensions;
 using Steepshot.Core.HttpClient;
 using Steepshot.Core.Models.Common;
+using Steepshot.Core.Models.Enums;
 using Steepshot.Core.Models.Requests;
 using Steepshot.Core.Utils;
 
@@ -86,7 +87,8 @@ namespace Steepshot.Core.Integration
             var model = new PreparePostModel(User.UserInfo, AppSettings.AppInfo.GetModel())
             {
                 Title = !string.IsNullOrEmpty(caption) ? caption.Truncate(252) : "Post from Instagram",
-                Description = !string.IsNullOrEmpty(caption) ? caption : string.Empty
+                Description = !string.IsNullOrEmpty(caption) ? caption : string.Empty,
+                SourceName = SourceType.Instagram.ToString()
             };
 
             var tagsM = TagRegex.Matches(model.Title);

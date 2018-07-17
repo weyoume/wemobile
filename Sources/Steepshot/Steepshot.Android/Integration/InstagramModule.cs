@@ -68,7 +68,6 @@ namespace Steepshot.Integration
             public string Scope { get; set; }
 
             public string RedirectUrl { get; set; }
-
         }
     }
 }
