@@ -12,6 +12,7 @@ using System;
 using Steepshot.Core.Authorization;
 using Steepshot.Core.HttpClient;
 using Android.Content;
+using Java.Util;
 
 namespace Steepshot.Base
 {
@@ -45,20 +46,15 @@ namespace Steepshot.Base
 
         public void CheckInstagram()
         {
-            //if (PendingIntent.GetBroadcast(Context, 0, new Intent(this, typeof(SocialReceiver)), PendingIntentFlags.NoCreate) == null)
-            {
-                var am = (AlarmManager)Context.GetSystemService(AlarmService);
-                var intent = new Intent(Context, typeof(SocialReceiver));
-                var pIntent = PendingIntent.GetBroadcast(Context, 0, intent, 0);
+            var when = Calendar.Instance;
+            when.Add(CalendarField.Second, 61);
 
-                Android.Util.Log.Debug("#Insta", $"Root");
-                am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 61000, 61000, pIntent);
-                //am.Set(AlarmType.ElapsedRealtimeWakeup, Android.OS.SystemClock.ElapsedRealtime() + 15000, pIntent);
-            }
-            //else
-            //{ 
-            //    Android.Util.Log.Debug("#Insta", $"AlarmManager was started");
-            //}
+            var am = (AlarmManager)Context.GetSystemService(AlarmService);
+            var myIntent = new Intent(Context, typeof(SocialReceiver));
+            var pIntent = PendingIntent.GetBroadcast(Context, 0, myIntent, 0);
+            am.SetRepeating(AlarmType.RtcWakeup, when.TimeInMillis, 61000, pIntent);
+
+            Android.Util.Log.Debug("#Insta", "_Alarm service started_");
         }
 
         public static void InitIoC(Android.Content.Res.AssetManager assetManagerssets)

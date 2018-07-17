@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Threading;
 using Android.App;
 using Android.Content;
@@ -11,7 +10,7 @@ using Steepshot.Core.Utils;
 
 namespace Steepshot.Services
 {
-    [BroadcastReceiver(Enabled = true, Permission = "android.permission.RECEIVE_BOOT_COMPLETED", DirectBootAware = true)]
+    [BroadcastReceiver(Enabled = true, Exported = false, Permission = "android.permission.RECEIVE_BOOT_COMPLETED", DirectBootAware = true)]
     [IntentFilter(new[] { Intent.ActionBootCompleted, "android.intent.action.QUICKBOOT_POWERON" })]
     public class SocialReceiver : BroadcastReceiver
     {
@@ -24,13 +23,14 @@ namespace Steepshot.Services
 
         public override void OnReceive(Context context, Intent intent)
         {
+            Log.Warn("#Insta", $"Task received");
             var connectionService = AppSettings.ConnectionService;
             if (connectionService.IsConnectionAvailable())
             {
                 var module = new InstagramModule(presenter.OpenApi.Gateway, AppSettings.User);
                 if (module.IsAuthorized())
                 {
-                    Log.Debug("#Insta", $"Create new post");
+                    Log.Debug("#Insta", $"Try create new post...");
                     module.TryCreateNewPost(CancellationToken.None);
                 }
             }
@@ -47,8 +47,6 @@ namespace Steepshot.Services
 
                 am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 61000, 61000, pIntent); // 300000 - 5min
             }
-
-            Log.Warn("#Insta", $"Task received");
         }
     }
 }
