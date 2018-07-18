@@ -76,18 +76,23 @@ namespace Steepshot.Core.Integration
             }
 
             if (prevData == null)
-            {
                 return;
-            }
 
-            string caption = string.Empty;
-            if (prevData != null)
-                caption = prevData.Caption?.Text;
+            var caption = prevData.Caption?.Text;
+            string title, description = string.Empty;
+
+            if (string.IsNullOrEmpty(caption))
+                title = description = "Post from Instagram";
+            else
+            {
+                title = caption.Truncate(255);
+                description = caption.Length > 255 ? caption : string.Empty;
+            }
 
             var model = new PreparePostModel(User.UserInfo, AppSettings.AppInfo.GetModel())
             {
-                Title = !string.IsNullOrEmpty(caption) ? caption.Truncate(252) : "Post from Instagram",
-                Description = !string.IsNullOrEmpty(caption) ? caption : string.Empty,
+                Title = title,
+                Description = description,
                 SourceName = SourceType.Instagram.ToString()
             };
 

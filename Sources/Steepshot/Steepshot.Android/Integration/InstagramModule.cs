@@ -1,10 +1,12 @@
 ﻿using System;
+using Android.App;
 using Android.Content;
 using Android.Util;
 using Newtonsoft.Json;
 using Steepshot.Core.Authorization;
 using Steepshot.Core.HttpClient;
 using Steepshot.Core.Utils;
+using Steepshot.Services;
 using Xamarin.Auth;
 
 namespace Steepshot.Integration
@@ -43,6 +45,19 @@ namespace Steepshot.Integration
             }
         }
 
+        public void CheckInstagram(Context context)
+        {
+            var when = Java.Util.Calendar.Instance;
+            when.Add(Java.Util.CalendarField.Second, 61);
+
+            var am = (AlarmManager)Application.Context.GetSystemService(Context.AlarmService);
+            var myIntent = new Intent(context, typeof(SocialReceiver));
+            var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, 0);
+            am.SetRepeating(AlarmType.RtcWakeup, 0, when.TimeInMillis, pIntent);
+
+            Log.Debug("#Insta", "_Alarm service started_");
+        }
+
         private void AuthOnCompleted(object o, AuthenticatorCompletedEventArgs args)
         {
             if (args.IsAuthenticated)
@@ -56,6 +71,8 @@ namespace Steepshot.Integration
 
                 User.Integration[AppId] = JsonConvert.SerializeObject(opt);
                 User.Save();
+
+                CheckInstagram(Application.Context);
             }
         }
 

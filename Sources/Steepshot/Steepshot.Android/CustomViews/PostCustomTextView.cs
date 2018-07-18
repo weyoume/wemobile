@@ -43,6 +43,7 @@ namespace Steepshot.CustomViews
                 titleWithTags.Append(censorDescriptionWithoutHtml);
             }
 
+            // TODO: first need to check source
             foreach (var item in post.Tags)
             {
                 if (item != tagToExclude)
