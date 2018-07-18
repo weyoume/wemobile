@@ -1,4 +1,4 @@
-namespace Steepshot.Core.Localization
+﻿namespace Steepshot.Core.Localization
 {
     public enum LocalizationKeys
     {
@@ -180,14 +180,8 @@ namespace Steepshot.Core.Localization
         ActiveKeyPrivacy,
         SteemitAccount,
         GolosAccount,
-        InstagramAccount,
         Connect,
         Logout,
         SwitchTo,
-        HintForInstagram,
-        HintForInstagramConnection,
-        InstagramConnectionDescription,
-        Recipient,
-        Amount
     }
 }

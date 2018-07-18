@@ -1,4 +1,4 @@
-namespace Steepshot.Core.Localization
+﻿namespace Steepshot.Core.Localization
 {
     public enum LocalizationKeys
     {
@@ -187,7 +187,5 @@ namespace Steepshot.Core.Localization
         HintForInstagram,
         HintForInstagramConnection,
         InstagramConnectionDescription,
-        Recipient,
-        Amount
     }
 }
