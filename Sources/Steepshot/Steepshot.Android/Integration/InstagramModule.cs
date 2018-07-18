@@ -45,14 +45,14 @@ namespace Steepshot.Integration
             }
         }
 
-        public void CheckInstagram(Context context)
+        public void CheckInstagram()
         {
             var when = Java.Util.Calendar.Instance;
             when.Add(Java.Util.CalendarField.Second, 61);
 
             var am = (AlarmManager)Application.Context.GetSystemService(Context.AlarmService);
-            var myIntent = new Intent(context, typeof(SocialReceiver));
-            var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, 0);
+            var myIntent = new Intent(Application.Context, typeof(SocialReceiver));
+            var pIntent = PendingIntent.GetBroadcast(Application.Context, 0, myIntent, 0);
             am.SetRepeating(AlarmType.RtcWakeup, 0, when.TimeInMillis, pIntent);
 
             Log.Debug("#Insta", "_Alarm service started_");
@@ -72,7 +72,7 @@ namespace Steepshot.Integration
                 User.Integration[AppId] = JsonConvert.SerializeObject(opt);
                 User.Save();
 
-                CheckInstagram(Application.Context);
+                CheckInstagram();
             }
         }
 
