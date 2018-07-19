@@ -93,7 +93,7 @@ namespace Steepshot.Core.Integration
             {
                 Title = title,
                 Description = description,
-                SourceName = SourceType.Instagram.ToString()
+                SourceName = AppId
             };
 
             var tagsM = TagRegex.Matches(model.Title);

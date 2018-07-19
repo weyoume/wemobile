@@ -44,9 +44,11 @@ namespace Steepshot.CustomViews
             }
 
             // TODO: first need to check source
+            var test = post.JsonMetadata.SourceName;
+
             foreach (var item in post.Tags)
             {
-                if (item != tagToExclude)
+                if (item != tagToExclude && string.IsNullOrEmpty(post.JsonMetadata.SourceName))
                     titleWithTags.AppendFormat(tagFormat, item.TagToRu());
             }
 

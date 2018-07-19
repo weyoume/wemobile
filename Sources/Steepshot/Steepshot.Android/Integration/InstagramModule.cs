@@ -55,7 +55,7 @@ namespace Steepshot.Integration
             var pIntent = PendingIntent.GetBroadcast(Application.Context, 0, myIntent, 0);
             am.SetRepeating(AlarmType.RtcWakeup, 0, when.TimeInMillis, pIntent);
 
-            Log.Debug("#Insta", "_Alarm service started_");
+            Log.Debug("#Insta", "---------------- Alarm service started ----------------");
         }
 
         private void AuthOnCompleted(object o, AuthenticatorCompletedEventArgs args)

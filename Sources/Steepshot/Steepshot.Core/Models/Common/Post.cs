@@ -9,6 +9,7 @@ namespace Steepshot.Core.Models.Common
     public class Post
     {
         private string _permlink;
+        private string _sourceName;
 
         public string Body { get; set; }
 
@@ -70,6 +71,8 @@ namespace Steepshot.Core.Models.Common
 
         public DateTime CashoutTime { get; set; }
 
+        public JsonMetadata JsonMetadata { get; set; }
+
         //system
         [JsonIgnore]
         public bool VoteChanging { get; set; }
@@ -85,7 +88,6 @@ namespace Steepshot.Core.Models.Common
         public bool IsComment { get; set; } = true;
         [JsonIgnore]
         public bool Editing { get; set; }
-
 
         public string Permlink
         {
