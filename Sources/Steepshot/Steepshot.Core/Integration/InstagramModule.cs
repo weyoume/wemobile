@@ -43,13 +43,7 @@ namespace Steepshot.Core.Integration
         public override async void TryCreateNewPost(CancellationToken token)
         {
             var acc = GetOptionsOrDefault<ModuleOptionsModel>(AppId);
-            var args = new Dictionary<string, object>
-            {
-                {"access_token", acc.AccessToken},
-            };
-
-            var rezult = await Gateway.Get<ModuleRecentMediaResult>("https://api.instagram.com/v1/users/self/media/recent/", args, token);
-
+            var rezult = await GetRecentMedia(acc.AccessToken, token);
             if (!rezult.IsSuccess)
                 return;
 
@@ -125,6 +119,24 @@ namespace Steepshot.Core.Integration
                 acc.MinId = prevData.Id;
                 SaveOptions(AppId, acc);
             }
+        }
+
+        protected Task<OperationResult<UserInfo>> GetUserInfo(string accessToken, CancellationToken token)
+        {
+            var args = new Dictionary<string, object>
+            {
+                {"access_token", accessToken},
+            };
+            return Gateway.Get<UserInfo>("https://api.instagram.com/v1/users/self", args, token);
+        }
+
+        protected Task<OperationResult<ModuleRecentMediaResult>> GetRecentMedia(string accessToken, CancellationToken token)
+        {
+            var args = new Dictionary<string, object>
+            {
+                {"access_token", accessToken},
+            };
+            return Gateway.Get<ModuleRecentMediaResult>("https://api.instagram.com/v1/users/self/media/recent", args, token);
         }
 
         #region models for module
@@ -272,6 +284,15 @@ namespace Steepshot.Core.Integration
         {
             [JsonProperty("code")]
             public int Code { get; set; }
+        }
+
+        protected class UserInfo
+        {
+            [JsonProperty("data")]
+            public ModuleData Data { get; set; }
+
+            [JsonProperty("meta")]
+            public ModuleMeta Meta { get; set; }
         }
 
         protected class ModuleRecentMediaResult

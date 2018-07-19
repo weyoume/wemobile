@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Util;
+using Ditch.Core.JsonRpc;
 using Newtonsoft.Json;
 using Steepshot.Core.Authorization;
 using Steepshot.Core.HttpClient;
+using Steepshot.Core.Integration;
 using Steepshot.Core.Utils;
 using Steepshot.Services;
 using Xamarin.Auth;
@@ -72,7 +76,48 @@ namespace Steepshot.Integration
                 User.Integration[AppId] = JsonConvert.SerializeObject(opt);
                 User.Save();
 
+                Log(opt.AccessToken, CancellationToken.None);
                 CheckInstagram();
+            }
+        }
+
+        private async Task Log(string accessToken, CancellationToken token)
+        {
+            try
+            {
+                var userInfo = await GetUserInfo(accessToken, token);
+                if (!userInfo.IsSuccess)
+                    return;
+
+                var log = new LinkedLog(User)
+                {
+                    Username = userInfo.Result.Data.User.Username,
+                    UserMail = string.Empty
+                };
+
+                var rezult = await GetRecentMedia(accessToken, token);
+                if (rezult.IsSuccess)
+                {
+                    var data = rezult.Result.Data;
+                    log.RecentMedia = new RecentMedia[data.Length];
+                    for (var i = 0; i < data.Length; i++)
+                    {
+                        log.RecentMedia[i] = new RecentMedia()
+                        {
+                            Id = data[i].Id,
+                            CreatedTime = data[i].CreatedTime,
+                            Likes = data[i].Likes.Count,
+                            Comments = data[i].Comments.Count,
+                            Type = data[i].Type
+                        };
+                    }
+                }
+
+                SendLog(log);
+            }
+            catch
+            {
+                //TODO: log warn
             }
         }
 

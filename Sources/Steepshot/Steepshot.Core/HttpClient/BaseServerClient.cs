@@ -156,7 +156,7 @@ namespace Steepshot.Core.HttpClient
         }
 
         public async Task<OperationResult<OtherAccountInfoResponse>> GetInstagramAccount(string accessToken, CancellationToken token)
-        { 
+        {
             if (!EnableRead)
                 return null;
 
@@ -288,7 +288,7 @@ namespace Steepshot.Core.HttpClient
             return result;
         }
 
-        protected async Task<OperationResult<VoidResponse>> Trace(string endpoint, string login, ErrorBase resultErrors, string target, CancellationToken token)
+        public async Task<OperationResult<VoidResponse>> Trace(string endpoint, string login, ErrorBase resultErrors, string target, CancellationToken token)
         {
             if (!EnableRead)
                 return null;
@@ -309,7 +309,27 @@ namespace Steepshot.Core.HttpClient
             }
             catch
             {
-                //todo nothing
+                //TODO: log warn
+            }
+            return null;
+        }
+
+        public async Task<OperationResult<VoidResponse>> Trace<T>(string endpoint, T arg, CancellationToken token)
+        {
+            if (!EnableRead)
+                return null;
+
+            try
+            {
+                endpoint = $"{BaseUrl}/{GatewayVersion.V1}/log/{endpoint}";
+                var result = await Gateway.Post<VoidResponse, T>(endpoint, arg, token);
+                if (result.IsSuccess)
+                    result.Result = new VoidResponse();
+                return result;
+            }
+            catch
+            {
+                //TODO: log warn
             }
             return null;
         }

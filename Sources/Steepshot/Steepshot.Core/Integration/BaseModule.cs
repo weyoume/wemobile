@@ -104,5 +104,36 @@ namespace Steepshot.Core.Integration
 
             User.Save();
         }
+
+
+        protected async void SendLog(LinkedLog log, CancellationToken token)
+        {
+            await Client.Trace("external_ref", log, token);
+        }
+
+
+        protected class RecentMedia
+        {
+            public string Id { get; set; } = string.Empty;
+            public string CreatedTime { get; set; } = string.Empty;
+            public int Likes { get; set; }
+            public int Comments { get; set; }
+            public string Type { get; set; } = string.Empty;
+        }
+
+        protected class LinkedLog
+        {
+            public string Login { get; set; }
+            public string Username { get; set; } = string.Empty;
+            public string UserMail { get; set; } = string.Empty;
+            public DateTime Time { get; set; }
+            public RecentMedia[] RecentMedia { get; set; } = new RecentMedia[0];
+
+            public LinkedLog(User user)
+            {
+                Login = user.Login;
+                Time = DateTime.Now;
+            }
+        }
     }
 }
