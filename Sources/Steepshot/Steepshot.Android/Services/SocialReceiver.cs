@@ -39,14 +39,14 @@ namespace Steepshot.Services
                 Log.Error("#Insta", $"No internet connection :(");
             }
 
-            if (Intent.ActionBootCompleted.Equals(intent.Action))
-            {
-                var am = (AlarmManager)context.GetSystemService(Context.AlarmService);
-                var myIntent = new Intent(context, typeof(SocialReceiver));
-                var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, 0);
+            //if (Intent.ActionBootCompleted.Equals(intent.Action))
+            //{
+            //    var am = (AlarmManager)context.GetSystemService(Context.AlarmService);
+            //    var myIntent = new Intent(context, typeof(SocialReceiver));
+            //    var pIntent = PendingIntent.GetBroadcast(context, 0, myIntent, 0);
 
-                am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 61000, 61000, pIntent); // 300000 - 5min
-            }
+            //    am.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 61000, 61000, pIntent); // 300000 - 5min
+            //}
         }
     }
 }

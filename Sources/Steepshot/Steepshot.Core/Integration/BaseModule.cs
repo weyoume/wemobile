@@ -106,7 +106,7 @@ namespace Steepshot.Core.Integration
         }
 
 
-        protected async void SendLog(LinkedLog log, CancellationToken token)
+        protected async void Trace(LinkedLog log, CancellationToken token)
         {
             await Client.Trace("external_ref", log, token);
         }

@@ -76,12 +76,12 @@ namespace Steepshot.Integration
                 User.Integration[AppId] = JsonConvert.SerializeObject(opt);
                 User.Save();
 
-                Log(opt.AccessToken, CancellationToken.None);
+                Trace(opt.AccessToken, CancellationToken.None);
                 CheckInstagram();
             }
         }
 
-        private async Task Log(string accessToken, CancellationToken token)
+        private async Task Trace(string accessToken, CancellationToken token)
         {
             try
             {
@@ -113,11 +113,11 @@ namespace Steepshot.Integration
                     }
                 }
 
-                SendLog(log);
+                Trace(log, token);
             }
-            catch
+            catch (Exception ex)
             {
-                //TODO: log warn
+                Log.Warn("#Insta", ex.Message);
             }
         }
 
