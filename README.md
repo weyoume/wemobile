@@ -1,6 +1,6 @@
-# Steepshot mobile application
+# WeYouMe iOS and Android native mobile application
 
-Community that rewards people for sharing their lifestyle and visual experience
+Community that rewards people for sharing
 
 ## License
 
